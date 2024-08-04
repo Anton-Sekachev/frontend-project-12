@@ -17,35 +17,65 @@ import routes from '../../routes';
 
 import loginImage from '../../Images/login.svg';
 
-const LoginPage = () => {
-  const { logIn, loggedIn } = useAuth();
-  const translate = useTranslation().t;
+const LoginForm = () => {
+  const { t } = useTranslation();
+  const { logIn } = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: { username: '', password: '' },
     onSubmit: async (values) => {
       setAuthFailed(false);
       try {
-        const response = await axios.post(routes.loginPath(), values);
-        localStorage.setItem('user', JSON.stringify(response.data));
-        logIn();
+        const { data } = await axios.post(routes.loginPath, values);
+        logIn(data);
+        navigate(routes.chatPagePath);
         formik.resetForm();
       } catch (error) {
-        setAuthFailed(true);
-        if (error.message === 'Network Error') {
-          toast.error(translate('errors.networkError'));
-        } else {
-          console.error(error);
-          formik.errors.password = translate('errors.wrongAuthData');
+        if (error.code === 'ERR_NETWORK') {
+          toast.error(t('errors.networkError'));
+        } else if (error.response.status === 401) {
+          setAuthFailed(true);
+          formik.setFieldError('password', t('errors.wrongAuthData'));
+          return;
         }
+        toast.error(t('errors.dataLoadingError'));
       }
     },
   });
 
-  if (loggedIn) {
-    return <Navigate to={routes.chatPagePath()} />;
-  }
+  return (
+    <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
+      <h1 className="text-center mb-4">{t('login')}</h1>
+      <fieldset disabled={formik.isSubmitting}>
+        <FormInput
+          type="text"
+          field="username"
+          formik={formik}
+          label={t('nickname')}
+          placeholder={t('nickname')}
+          isInvalid={authFailed}
+          autoFocus
+        />
+        <FormInput
+          type="password"
+          field="password"
+          formik={formik}
+          label={t('password')}
+          placeholder={t('password')}
+          isInvalid={authFailed}
+        />
+        <Button type="submit" disabled={formik.isSubmitting} variant="outline-primary" className="w-100 mb-3">
+          {t('loginButton')}
+        </Button>
+      </fieldset>
+    </Form>
+  );
+};
+
+const LoginPage = () => {
+  const { t } = useTranslation();
 
   return (
     <Container className="h-100" fluid>
@@ -53,56 +83,15 @@ const LoginPage = () => {
         <Col className="col-12 col-md-8 col-xxl-6">
           <Card className="shadow-sm">
             <Card.Body className="p-5 row">
-              <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                <img
-                  style={{ pointerEvents: 'none' }}
-                  src={loginImage}
-                  className="roundedCircle"
-                  alt="Login"
-                  width="250px"
-                />
-              </div>
-              <Form
-                onSubmit={formik.handleSubmit}
-                className="col-12 col-md-6 mt-3 mt-mb-0"
-              >
-                <h1 className="text-center mb-4">{translate('login')}</h1>
-                <fieldset disabled={formik.isSubmitting}>
-                  <FormInput
-                    type="text"
-                    field="username"
-                    formik={formik}
-                    label={translate('nickname')}
-                    placeholder={translate('nickname')}
-                    isInvalid={authFailed}
-                    autoFocus
-                  />
-                  <FormInput
-                    type="password"
-                    field="password"
-                    formik={formik}
-                    label={translate('password')}
-                    placeholder={translate('password')}
-                    isInvalid={authFailed}
-                  />
-                  <Button
-                    type="submit"
-                    disabled={formik.isSubmitting}
-                    variant="outline-primary"
-                    className="w-100 mb-3"
-                  >
-                    {translate('loginButton')}
-                  </Button>
-                </fieldset>
-              </Form>
+              <Col className="col-12 col-md-6 d-flex align-items-center justify-content-center">
+                <img style={{ pointerEvents: 'none' }} src={loginImage} className="roundedCircle" alt="Login" width="250px" />
+              </Col>
+              <LoginForm />
             </Card.Body>
             <Card.Footer className="p-4">
-              <div className="text-center">
-                <span>{translate('noAccount')}</span>
-                {' '}
-                <Link to={routes.signupPagePath()}>
-                  {translate('register')}
-                </Link>
+              <div className="d-flex justify-content-center gap-2">
+                <span>{t('noAccount')}</span>
+                <Link to={routes.signupPagePath}>{t('register')}</Link>
               </div>
             </Card.Footer>
           </Card>
@@ -111,4 +100,5 @@ const LoginPage = () => {
     </Container>
   );
 };
+
 export default LoginPage;
