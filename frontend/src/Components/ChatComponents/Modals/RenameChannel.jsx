@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { closeModal } from '../../../redux/slices/modalSlice';
 import useFilter from '../../../Hooks/useFilter';
-import socket from '../../../socket';
+import socket from '../../../socketApi';
 import selectors from '../../../redux/selectors';
 
 const RenameChannel = () => {

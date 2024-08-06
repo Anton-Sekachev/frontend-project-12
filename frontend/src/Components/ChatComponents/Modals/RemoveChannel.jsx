@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { closeModal } from '../../../redux/slices/modalSlice';
-import socket from '../../../socket';
+import socket from '../../../socketApi';
 import selectors from '../../../redux/selectors';
 
 const RemoveChannel = () => {

@@ -10,7 +10,7 @@ import Message from './Message.jsx';
 import selectors from '../../../redux/selectors.js';
 import useAuth from '../../../Hooks/useAuth';
 import useFilter from '../../../Hooks/useFilter';
-import socket from '../../../socket.js';
+import socket from '../../../socketApi.js';
 
 const scrollToBottom = (element) => {
   const { scrollHeight } = element;

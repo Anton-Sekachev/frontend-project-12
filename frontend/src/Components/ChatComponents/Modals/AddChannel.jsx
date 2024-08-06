@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import { closeModal } from '../../../redux/slices/modalSlice';
 import { setActiveChannel } from '../../../redux/slices/channelsSlice';
 import useFilter from '../../../Hooks/useFilter';
-import socket from '../../../socket';
+import socket from '../../../socketApi';
 import selectors from '../../../redux/selectors';
 
 const AddChannel = () => {
