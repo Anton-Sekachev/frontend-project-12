@@ -1,34 +1,37 @@
-import { io } from 'socket.io-client';
-import store from './redux';
-import { addChannel, renameChannel, removeChannel } from './redux/slices/channelsSlice';
-import { addMessage } from './redux/slices/messagesSlice';
+export default (socket) => ({
+  sendMessage: (message) => new Promise((resolve, reject) => {
+    socket.timeout(3000).emit('newMessage', message, (error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve();
+    });
+  }),
 
-const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://127.0.0.1:3000';
-const { dispatch } = store;
+  addChannel: (name) => new Promise((resolve, reject) => {
+    socket.timeout(3000).emit('newChannel', { name }, (error, payload) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(payload);
+    });
+  }),
 
-const socket = io(URL, {
-  autoConnect: true,
+  renameChannel: ({ id, name }) => new Promise((resolve, reject) => {
+    socket.timeout(3000).emit('renameChannel', { id, name }, (error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve();
+    });
+  }),
+
+  removeChannel: (id) => new Promise((resolve, reject) => {
+    socket.timeout(3000).emit('removeChannel', { id }, (error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve();
+    });
+  }),
 });
-
-const onNewMessage = (payload) => {
-  dispatch(addMessage(payload));
-};
-
-const onNewChannel = (payload) => {
-  dispatch(addChannel(payload));
-};
-
-const onRemoveChannel = (payload) => {
-  dispatch(removeChannel(payload));
-};
-
-const onRenameChannel = (payload) => {
-  dispatch(renameChannel(payload));
-};
-
-socket.on('newMessage', onNewMessage);
-socket.on('newChannel', onNewChannel);
-socket.on('removeChannel', onRemoveChannel);
-socket.on('renameChannel', onRenameChannel);
-
-export default socket;
