@@ -1,33 +1,36 @@
 import { Form, Button } from 'react-bootstrap';
 import { IoSendSharp } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useContext } from 'react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+import SocketContext from '../../../Contexts/SocketContext.js';
 import Message from './Message.jsx';
 import selectors from '../../../redux/selectors.js';
 import useAuth from '../../../Hooks/useAuth';
 import useFilter from '../../../Hooks/useFilter';
-import socket from '../../../socketApi.js';
 
 const scrollToBottom = (element) => {
-  const { scrollHeight } = element;
-  const height = element.clientHeight;
-  const maxScrollTop = scrollHeight - height;
-  element.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+  element.scrollTo(0, element.scrollHeight);
 };
 
+const MessageSchema = Yup.object().shape({
+  body: Yup.string().trim().min(1).required(),
+});
+
 const Messages = () => {
+  const { t } = useTranslation();
   const messagesBoxRef = useRef();
   const messageInputRef = useRef();
-  const translate = useTranslation().t;
   const filter = useFilter();
+  const socketApi = useContext(SocketContext);
 
   const currentChannelId = useSelector(selectors.currentChannelIdSelector);
   const currentChannelName = useSelector(selectors.currentChannelNameSelector);
   const messages = useSelector(selectors.messagesSelector);
+
   const { username } = useAuth().user;
 
   useEffect(() => {
@@ -38,28 +41,23 @@ const Messages = () => {
     scrollToBottom(messagesBoxRef.current);
   }, [messages]);
 
-  const MessageSchema = Yup.object().shape({
-    body: Yup.string().trim().min(1).required(),
-  });
-
   const formik = useFormik({
     initialValues: { body: '' },
     validationSchema: MessageSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const newMessage = {
         body: filter.clean(values.body),
         channelId: currentChannelId,
         username,
       };
 
-      socket.emit('newMessage', newMessage, (payload) => {
-        if (payload.error) {
-          console.error(payload.error);
-          toast(translate('errors.dataLoadingError'));
-        } else {
-          formik.resetForm();
-        }
-      });
+      try {
+        await socketApi.sendMessage(newMessage);
+        formik.resetForm();
+      } catch (error) {
+        toast.error(t('errors.dataLoadingError'));
+        console.warn(error);
+      }
     },
   });
 
@@ -70,7 +68,7 @@ const Messages = () => {
           <p className="m-0">
             <b>{`# ${currentChannelName}`}</b>
           </p>
-          <span className="text-muted">{`${messages.length} ${translate('messages.count', { count: messages.length })}`}</span>
+          <span className="text-muted">{`${messages.length} ${t('messages.count', { count: messages.length })}`}</span>
         </div>
         <div ref={messagesBoxRef} id="messages-box" className="chat-messages overflow-auto px-5">
           {
@@ -79,34 +77,34 @@ const Messages = () => {
         </div>
         <div className="mt-auto px-5 py-3">
           <Form
-            noValidate
             className="py-1 border rounded-2"
             onSubmit={formik.handleSubmit}
+            noValidate
           >
             <Form.Group className="input-group">
               <Form.Control
-                ref={messageInputRef}
                 id="body"
                 name="body"
-                aria-label={translate('messages.newMessage')}
-                placeholder={translate('messages.enterMessage')}
                 className="border-0 p-0 ps-2"
                 autoComplete="off"
+                ref={messageInputRef}
+                aria-label={t('messages.newMessage')}
+                placeholder={t('messages.enterMessage')}
                 onChange={formik.handleChange}
                 value={formik.values.body}
                 disabled={formik.isSubmitting}
                 autoFocus
               />
-              <span title={translate('messages.sendMessage')}>
+              <span title={t('messages.sendMessage')}>
                 <Button
-                  style={{ border: 'none' }}
-                  variant="group-vertical"
                   type="submit"
+                  variant="group-vertical"
+                  style={{ border: 'none' }}
                   disabled={formik.isSubmitting || !formik.values.body.trim()}
                   onClick={formik.handleSubmit}
                 >
                   <IoSendSharp size={20} color="rgb(85 133 124)" />
-                  <span className="visually-hidden">{translate('messages.sendMessage')}</span>
+                  <span className="visually-hidden">{t('messages.sendMessage')}</span>
                 </Button>
               </span>
             </Form.Group>
