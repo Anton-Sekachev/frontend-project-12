@@ -14,4 +14,5 @@ start:
 	make start-backend & make start-frontend
 
 build:
+	rm -rf frontend/build
 	npm run build
