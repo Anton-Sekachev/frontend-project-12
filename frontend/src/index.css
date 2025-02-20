@@ -24,8 +24,8 @@
 	border: 3px solid #cccccccc;
 }
 
-.add-channel:active svg {
-	color: rgb(54, 109, 99) !important;
+.add-channel.add-channel:active svg {
+	color: rgb(54, 109, 99);
 }
 
 .dropdown-item:active {
