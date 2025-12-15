@@ -14,8 +14,7 @@ import SocketContext from './Contexts/SocketContext';
 import getSocketApi from './socketApi';
 
 const Init = async () => {
-  const SOCKET_URL = process.env.NODE_ENV === 'production' ? undefined : 'http://127.0.0.1:3000';
-  const socket = io.connect(SOCKET_URL);
+  const socket = io.connect();
   const socketApi = getSocketApi(socket);
   const i18n = i18next.createInstance();
   const { dispatch } = store;
