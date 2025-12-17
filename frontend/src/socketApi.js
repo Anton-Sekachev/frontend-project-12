@@ -1,6 +1,6 @@
 export default (socket) => ({
   sendMessage: (message) => new Promise((resolve, reject) => {
-    socket.timeout(3000).emit('newMessage', message, (error) => {
+    socket.timeout(5000).emit('newMessage', message, (error) => {
       if (error) {
         reject(error);
       }
@@ -9,7 +9,7 @@ export default (socket) => ({
   }),
 
   addChannel: (name) => new Promise((resolve, reject) => {
-    socket.timeout(3000).emit('newChannel', { name }, (error, payload) => {
+    socket.timeout(5000).emit('newChannel', { name }, (error, payload) => {
       if (error) {
         reject(error);
       }
@@ -18,7 +18,7 @@ export default (socket) => ({
   }),
 
   renameChannel: ({ id, name }) => new Promise((resolve, reject) => {
-    socket.timeout(3000).emit('renameChannel', { id, name }, (error) => {
+    socket.timeout(5000).emit('renameChannel', { id, name }, (error) => {
       if (error) {
         reject(error);
       }
@@ -27,7 +27,7 @@ export default (socket) => ({
   }),
 
   removeChannel: (id) => new Promise((resolve, reject) => {
-    socket.timeout(3000).emit('removeChannel', { id }, (error) => {
+    socket.timeout(5000).emit('removeChannel', { id }, (error) => {
       if (error) {
         reject(error);
       }

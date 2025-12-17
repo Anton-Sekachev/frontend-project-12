@@ -19,6 +19,7 @@ plugins:
   - functional
 
 rules:
+  import/no-extraneous-dependencies: [2, { "devDependencies": ["**/*.test.js", "**/*.spec.js", "**/vite.config.js"] }]
   import/extensions: 0
   import/no-unresolved: 0
   react/prop-types: 0
