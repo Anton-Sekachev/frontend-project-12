@@ -4,7 +4,8 @@ install:
 
 build:
 	rm -rf frontend/build
-	npm run build --prefix frontend
+	cd frontend && npm ci && npm run build
+	npm ci
 
 start:
 	npx start-server -s ./frontend/build
