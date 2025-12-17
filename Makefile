@@ -3,6 +3,7 @@ install:
 	npm ci --prefix frontend
 
 build:
+	npm ci --prefix frontend
 	rm -rf frontend/build
 	npm run build --prefix frontend
 
