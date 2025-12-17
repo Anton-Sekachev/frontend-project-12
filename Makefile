@@ -1,10 +1,10 @@
 install:
 	npm ci
-	npm ci --prefix frontend
+	cd frontend && npm install
 
 build:
 	rm -rf frontend/build
-	cd frontend && npm ci && npm run build
+	cd frontend && npm install --include=dev && npm run build
 	npm ci
 
 start:
