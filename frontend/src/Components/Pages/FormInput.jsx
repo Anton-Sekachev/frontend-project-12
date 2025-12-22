@@ -31,7 +31,6 @@ const FormInput = (props) => {
           disabled={formik.isSubmitting}
           placeholder={placeholder}
           autoFocus={autoFocus}
-          required
         />
         {errorText && <div className="invalid-tooltip">{errorText}</div>}
       </FloatingLabel>

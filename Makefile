@@ -13,3 +13,14 @@ start:
 
 lint-frontend:
 	make -C frontend lint
+
+# Запуск только фронтенда в режиме разработки
+frontend-dev:
+	cd frontend && npm run dev
+
+# Запуск бэкенда в режиме разработки
+backend-dev:
+	npx start-server
+
+dev:
+	npx concurrently "make backend-dev" "make frontend-dev"
