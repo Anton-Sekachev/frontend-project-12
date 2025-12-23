@@ -23,16 +23,24 @@ const ChatPage = () => {
   useEffect(() => {
     const authHeader = getAuthHeader();
 
-    dispatch(fetchData(authHeader))
-      .unwrap()
-      .catch((error) => {
-        if (error.status === 401) {
-          toast.error(t('errors.unauthorized'));
-          logOut();
-        } else {
-          toast.error(t('errors.dataLoadingError'));
-        }
-      });
+    if (authHeader && authHeader.Authorization) {
+      dispatch(fetchData(authHeader))
+        .unwrap()
+        .then((data) => {
+          console.log('Данные успешно загружены:', data);
+        })
+        .catch((error) => {
+          console.error('Ошибка при загрузке данных:', error);
+
+          if (error?.status === 401 || error?.status === 404) {
+            logOut();
+          } else {
+            toast.error(t('errors.dataLoadingError'));
+          }
+        });
+    } else {
+      console.warn('Запрос не отправлен: отсутствует токен в getAuthHeader');
+    }
   }, [dispatch, getAuthHeader, logOut, t]);
 
   if (status === 'loading') {

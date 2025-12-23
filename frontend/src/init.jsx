@@ -21,7 +21,7 @@ const Init = async () => {
   const socket = io({
     transports: ['websocket'],
     auth: {
-      token: JSON.parse(localStorage.getItem('userId') || '{}').token,
+      token: JSON.parse(localStorage.getItem('user') || '{}').token,
     },
   });
 

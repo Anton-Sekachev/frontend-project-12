@@ -30,17 +30,17 @@ const LoginForm = () => {
       try {
         const { data } = await axios.post(routes.loginPath, values);
         logIn(data);
-        navigate(routes.chatPagePath);
         formik.resetForm();
+        navigate(routes.chatPagePath);
       } catch (error) {
         if (error.code === 'ERR_NETWORK') {
           toast.error(t('errors.networkError'));
-        } else if (error.response.status === 401) {
+        } else if (error.response?.status === 401) {
           setAuthFailed(true);
           formik.setFieldError('password', t('errors.wrongAuthData'));
-          return;
+        } else {
+          toast.error(t('errors.dataLoadingError'));
         }
-        toast.error(t('errors.dataLoadingError'));
       }
     },
   });

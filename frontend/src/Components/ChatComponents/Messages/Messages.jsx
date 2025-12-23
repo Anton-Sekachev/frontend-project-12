@@ -45,8 +45,9 @@ const Messages = () => {
     initialValues: { body: '' },
     validationSchema: MessageSchema,
     onSubmit: async (values) => {
+      const cleanBody = filter.clean(values.body);
       const newMessage = {
-        body: filter.clean(values.body),
+        body: cleanBody,
         channelId: currentChannelId,
         username,
       };
@@ -54,6 +55,7 @@ const Messages = () => {
       try {
         await socketApi.sendMessage(newMessage);
         formik.resetForm();
+        messageInputRef.current.focus();
       } catch (error) {
         toast.error(t('errors.dataLoadingError'));
         console.warn(error);
@@ -101,7 +103,6 @@ const Messages = () => {
                   variant="group-vertical"
                   style={{ border: 'none' }}
                   disabled={formik.isSubmitting || !formik.values.body.trim()}
-                  onClick={formik.handleSubmit}
                 >
                   <IoSendSharp size={20} color="rgb(85 133 124)" />
                   <span className="visually-hidden">{t('messages.sendMessage')}</span>
