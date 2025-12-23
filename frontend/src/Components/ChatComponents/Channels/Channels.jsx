@@ -12,21 +12,22 @@ import selectors from '../../../redux/selectors.js';
 const Channels = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const channels = useSelector(selectors.channelsSelector);
+  const channels = useSelector(selectors.channelsSelector) ?? [];
   const defaultChannelId = 1;
-  const currentChannelId = useSelector(selectors.currentChannelIdSelector);
-  const lastChannelId = channels.at(-1)?.id;
+  const currentChannelId = useSelector(selectors.currentChannelIdSelector) ?? defaultChannelId;
+  const lastChannelId = channels.length > 0 ? channels[channels.length - 1].id : null;
 
   useEffect(() => {
+    if (!channels.length) return;
+
     const animateOptions = { containerId: 'channels-list', delay: 0, offset: 50 };
+
     if (currentChannelId === defaultChannelId) {
       animateScroll.scrollToTop(animateOptions);
-    }
-    if (currentChannelId === lastChannelId) {
+    } else if (currentChannelId === lastChannelId) {
       animateScroll.scrollToBottom(animateOptions);
     }
-  }, [currentChannelId, lastChannelId]);
-
+  }, [currentChannelId, lastChannelId, channels.length]);
   const handleOpenModal = () => {
     dispatch(openModal({ type: 'addChannel' }));
   };

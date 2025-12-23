@@ -1,18 +1,25 @@
 import { createSelector } from 'reselect';
 
-const currentChannelIdSelector = ({ channelsSlice }) => channelsSlice.currentChannelId;
+const currentChannelIdSelector = ({ channelsSlice }) => channelsSlice.currentChannelId ?? 1;
 
-const channelsSelector = ({ channelsSlice }) => channelsSlice.channels;
+const channelsSelector = ({ channelsSlice }) => channelsSlice.channels ?? [];
 
-const getCurrentMessages = (state) => state.messagesSlice.messages
-  .filter((message) => message.channelId === state.channelsSlice.currentChannelId);
+const getCurrentMessages = (state) => {
+  const messages = state.messagesSlice.messages ?? [];
+  const currentChannelId = state.channelsSlice.currentChannelId ?? 1;
+  return messages.filter((message) => message.channelId === currentChannelId);
+};
 
-const messagesSelector = createSelector(getCurrentMessages, (messages) => messages);
+const messagesSelector = createSelector(
+  getCurrentMessages,
+  (messages) => messages,
+);
 
 const currentChannelNameSelector = (state) => {
-  const currentChannel = state.channelsSlice.channels
-    .find((channel) => channel.id === state.channelsSlice.currentChannelId) ?? { name: '' };
-  return currentChannel.name;
+  const channels = state.channelsSlice.channels ?? [];
+  const currentChannelId = state.channelsSlice.currentChannelId ?? 1;
+  const channel = channels.find((ch) => ch.id === currentChannelId);
+  return channel?.name ?? 'general';
 };
 
 const modalIsOpenedSelector = ({ modalSlice }) => modalSlice.isOpened;
@@ -24,11 +31,14 @@ const channelsNamesSelector = createSelector(
 
 const modalTypeSelector = (state) => state.modalSlice.type;
 
-const modalChannelIdSelector = ({ modalSlice }) => modalSlice.data.channelId;
+const modalChannelIdSelector = ({ modalSlice }) => modalSlice.data?.channelId;
 
-const channelNameSelector = (state) => state.channelsSlice.channels
-  .find((channel) => channel.id === state.modalSlice.data.channelId)
-  .name;
+const channelNameSelector = (state) => {
+  const channels = state.channelsSlice.channels ?? [];
+  const channelId = state.modalSlice.data?.channelId;
+  const channel = channels.find((ch) => ch.id === channelId);
+  return channel?.name ?? '';
+};
 
 const statusSelector = (state) => state.channelsSlice.status;
 

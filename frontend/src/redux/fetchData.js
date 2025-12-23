@@ -9,7 +9,7 @@ const fetchData = createAsyncThunk(
       const response = await axios.get(routes.dataPath, { headers: authHeader });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error.message);
     }
   },
 );
