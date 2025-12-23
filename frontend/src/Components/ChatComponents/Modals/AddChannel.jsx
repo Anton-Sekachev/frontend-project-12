@@ -1,7 +1,7 @@
 import Modal from 'react-bootstrap/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { closeModal } from '../../../redux/slices/modalSlice';
@@ -17,31 +17,38 @@ const AddChannel = () => {
   const dispatch = useDispatch();
   const filter = useFilter();
   const socketApi = useContext(SocketContext);
+  const inputRef = useRef(null);
 
   const channelNames = useSelector(selectors.channelsNamesSelector);
   const ChannelNameSchema = getChannelNameSchema(channelNames);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const formik = useFormik({
     initialValues: { channelName: '' },
     validationSchema: ChannelNameSchema,
     validateOnChange: false,
     validateOnBlur: false,
-    onSubmit: async (values) => {
+    onSubmit: async (values, { setSubmitting }) => {
+      const cleanName = filter.clean(values.channelName.trim());
+
       try {
-        formik.values.channelName = filter.clean(values.channelName);
-        await ChannelNameSchema.validate({ channelName: values.channelName });
-        const { data } = await socketApi.addChannel(values.channelName);
+        const response = await socketApi.addChannel(cleanName);
+        const { data } = response;
+
+        toast.success(t('channels.channelAdded'));
+
         dispatch(setActiveChannel(data.id));
-        toast(t('channels.channelAdded'));
         dispatch(closeModal());
         formik.resetForm();
-      } catch (error) {
-        if (error instanceof ChannelNameSchema.ValidationError) {
-          formik.setFieldError('channelName', error.message);
-          return;
-        }
-        toast.error(t('errors.dataLoadingError'));
-        console.warn(error);
+      } catch (err) {
+        console.error(err);
+        toast.error(t('errors.network'));
+        setSubmitting(false);
       }
     },
   });
@@ -51,7 +58,7 @@ const AddChannel = () => {
       <Modal.Header closeButton>
         <Modal.Title>{t('channels.addChannel')}</Modal.Title>
       </Modal.Header>
-      <ModalForm onSubmit={formik.handleSubmit} formik={formik} />
+      <ModalForm onSubmit={formik.handleSubmit} formik={formik} inputRef={inputRef} />
     </>
   );
 };
