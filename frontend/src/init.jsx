@@ -4,12 +4,14 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import { Provider as ReduxProvider } from 'react-redux';
 import { io } from 'socket.io-client';
+
 import {
   addChannel,
   renameChannel,
   removeChannel,
 } from './redux/slices/channelsSlice';
 import { addMessage } from './redux/slices/messagesSlice';
+
 import App from './App';
 import resources from './locales';
 import rollbarConfig from './rollbar';
@@ -30,22 +32,20 @@ const Init = async () => {
   const { dispatch } = store;
 
   socket.on('newMessage', (payload) => {
+    console.log('1. SOCKET RECEIVED:', payload);
     dispatch(addMessage(payload));
   });
 
   socket.on('newChannel', (payload) => {
-    const channel = payload.data || payload;
-    dispatch(addChannel(channel));
+    dispatch(addChannel(payload));
   });
 
   socket.on('renameChannel', (payload) => {
-    const channel = payload.data || payload;
-    dispatch(renameChannel(channel));
+    dispatch(renameChannel(payload));
   });
 
   socket.on('removeChannel', (payload) => {
-    const { id } = payload.data || payload;
-    dispatch(removeChannel({ id }));
+    dispatch(removeChannel({ id: payload.id }));
   });
 
   await i18n.use(initReactI18next).init({

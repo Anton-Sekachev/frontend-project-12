@@ -1,19 +1,21 @@
 import { Form, Button } from 'react-bootstrap';
 import { IoSendSharp } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
-import { useRef, useEffect, useContext } from 'react';
+import { useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 import * as Yup from 'yup';
-import SocketContext from '../../../Contexts/SocketContext.js';
 import Message from './Message.jsx';
 import selectors from '../../../redux/selectors.js';
 import useAuth from '../../../Hooks/useAuth';
 import useFilter from '../../../Hooks/useFilter';
 
 const scrollToBottom = (element) => {
-  element.scrollTo(0, element.scrollHeight);
+  if (element) {
+    element.scrollTo(0, element.scrollHeight);
+  }
 };
 
 const MessageSchema = Yup.object().shape({
@@ -25,17 +27,17 @@ const Messages = () => {
   const messagesBoxRef = useRef();
   const messageInputRef = useRef();
   const filter = useFilter();
-  const socketApi = useContext(SocketContext);
+
+  const { getAuthHeader, user } = useAuth();
 
   const currentChannelId = useSelector(selectors.currentChannelIdSelector);
   const currentChannelName = useSelector(selectors.currentChannelNameSelector);
   const messages = useSelector(selectors.messagesSelector);
-
-  const { username } = useAuth().user;
-
+  const fullState = useSelector((state) => state);
+  console.log('DEBUG: ВЕСЬ Redux Стейт:', fullState);
   useEffect(() => {
-    messageInputRef.current.focus();
-  });
+    messageInputRef.current?.focus();
+  }, [currentChannelId]);
 
   useEffect(() => {
     scrollToBottom(messagesBoxRef.current);
@@ -45,20 +47,25 @@ const Messages = () => {
     initialValues: { body: '' },
     validationSchema: MessageSchema,
     onSubmit: async (values) => {
-      const cleanBody = filter.clean(values.body);
+      const cleanBody = filter.clean(values.body.trim());
       const newMessage = {
         body: cleanBody,
-        channelId: currentChannelId,
-        username,
+        username: user.username,
       };
 
       try {
-        await socketApi.sendMessage(newMessage);
+        const header = getAuthHeader();
+        await axios.post(
+          `/api/v1/channels/${currentChannelId}/messages`,
+          newMessage,
+          { headers: header },
+        );
+
         formik.resetForm();
-        messageInputRef.current.focus();
+        setTimeout(() => messageInputRef.current?.focus(), 0);
       } catch (error) {
-        toast.error(t('errors.dataLoadingError'));
-        console.warn(error);
+        toast.error(t('errors.network'));
+        console.error(error);
       }
     },
   });
@@ -70,13 +77,17 @@ const Messages = () => {
           <p className="m-0">
             <b>{`# ${currentChannelName}`}</b>
           </p>
-          <span className="text-muted">{`${messages.length} ${t('messages.count', { count: messages.length })}`}</span>
+          <span className="text-muted">
+            {t('messages.count', { count: messages.length })}
+          </span>
         </div>
+
         <div ref={messagesBoxRef} id="messages-box" className="chat-messages overflow-auto px-5">
-          {
-            messages.map((message) => <Message message={message} key={message.id} />)
-          }
+          {messages.map((message) => (
+            <Message message={message} key={message.id} />
+          ))}
         </div>
+
         <div className="mt-auto px-5 py-3">
           <Form
             className="py-1 border rounded-2"
@@ -95,19 +106,16 @@ const Messages = () => {
                 onChange={formik.handleChange}
                 value={formik.values.body}
                 disabled={formik.isSubmitting}
-                autoFocus
               />
-              <span title={t('messages.sendMessage')}>
-                <Button
-                  type="submit"
-                  variant="group-vertical"
-                  style={{ border: 'none' }}
-                  disabled={formik.isSubmitting || !formik.values.body.trim()}
-                >
-                  <IoSendSharp size={20} color="rgb(85 133 124)" />
-                  <span className="visually-hidden">{t('messages.sendMessage')}</span>
-                </Button>
-              </span>
+              <Button
+                type="submit"
+                variant="group-vertical"
+                className="border-0"
+                disabled={formik.isSubmitting || !formik.values.body.trim()}
+              >
+                <IoSendSharp size={20} color="rgb(85 133 124)" />
+                <span className="visually-hidden">{t('messages.sendMessage')}</span>
+              </Button>
             </Form.Group>
           </Form>
         </div>

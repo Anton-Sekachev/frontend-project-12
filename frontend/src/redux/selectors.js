@@ -1,42 +1,38 @@
 import { createSelector } from 'reselect';
 
-const currentChannelIdSelector = ({ channelsSlice }) => channelsSlice.currentChannelId ?? 1;
-
-const channelsSelector = ({ channelsSlice }) => channelsSlice.channels ?? [];
-
-const getCurrentMessages = (state) => {
-  const messages = state.messagesSlice.messages ?? [];
-  const currentChannelId = state.channelsSlice.currentChannelId ?? 1;
-  return messages.filter((message) => message.channelId === currentChannelId);
-};
+const currentChannelIdSelector = (state) => state.channelsSlice.currentChannelId ?? 1;
+const channelsSelector = (state) => state.channelsSlice.channels ?? [];
 
 const messagesSelector = createSelector(
-  getCurrentMessages,
-  (messages) => messages,
+  [(state) => state.messagesSlice.messages, currentChannelIdSelector],
+  (messages, currentChannelId) => {
+    const allMessages = messages ?? [];
+    // Приведение к Number — самое важное здесь!
+    return allMessages.filter((message) => Number(message.channelId) === Number(currentChannelId));
+  },
 );
 
-const currentChannelNameSelector = (state) => {
-  const channels = state.channelsSlice.channels ?? [];
-  const currentChannelId = state.channelsSlice.currentChannelId ?? 1;
-  const channel = channels.find((ch) => ch.id === currentChannelId);
-  return channel?.name ?? 'general';
-};
+const currentChannelNameSelector = createSelector(
+  [channelsSelector, currentChannelIdSelector],
+  (channels, currentChannelId) => {
+    const channel = channels.find((ch) => Number(ch.id) === Number(currentChannelId));
+    return channel?.name ?? 'general';
+  },
+);
 
 const modalIsOpenedSelector = ({ modalSlice }) => modalSlice.isOpened;
+const modalTypeSelector = (state) => state.modalSlice.type;
+const modalChannelIdSelector = ({ modalSlice }) => modalSlice.data?.channelId;
 
 const channelsNamesSelector = createSelector(
   channelsSelector,
   (channels) => channels.map(({ name }) => name),
 );
 
-const modalTypeSelector = (state) => state.modalSlice.type;
-
-const modalChannelIdSelector = ({ modalSlice }) => modalSlice.data?.channelId;
-
 const channelNameSelector = (state) => {
   const channels = state.channelsSlice.channels ?? [];
   const channelId = state.modalSlice.data?.channelId;
-  const channel = channels.find((ch) => ch.id === channelId);
+  const channel = channels.find((ch) => Number(ch.id) === Number(channelId));
   return channel?.name ?? '';
 };
 

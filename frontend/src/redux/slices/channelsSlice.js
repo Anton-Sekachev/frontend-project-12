@@ -1,9 +1,13 @@
 /* eslint-disable no-param-reassign */
-
 import { createSlice } from '@reduxjs/toolkit';
 import fetchData from '../fetchData';
 
-const initialState = { status: 'idle', channels: [], currentChannelId: null };
+const initialState = {
+  status: 'idle',
+  channels: [],
+  currentChannelId: null,
+};
+
 const DEFAULT_CHANNEL_ID = 1;
 
 const channelsSlice = createSlice({
@@ -11,17 +15,22 @@ const channelsSlice = createSlice({
   initialState,
   reducers: {
     addChannel(state, { payload }) {
+      if (!state.channels) {
+        state.channels = [];
+      }
       state.channels.push(payload);
     },
     renameChannel(state, { payload }) {
       const { id, name } = payload;
-      const channel = state.channels.find((c) => c.id === id);
+      const channel = state.channels?.find((c) => c.id === id);
       if (channel) {
         channel.name = name;
       }
     },
     removeChannel(state, { payload }) {
-      state.channels = state.channels.filter((channel) => channel.id !== payload.id);
+      if (state.channels) {
+        state.channels = state.channels.filter((channel) => channel.id !== payload.id);
+      }
       if (state.currentChannelId === payload.id) {
         state.currentChannelId = DEFAULT_CHANNEL_ID;
       }
@@ -36,8 +45,8 @@ const channelsSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchData.fulfilled, (state, action) => {
-        state.channels = action.payload.channels;
-        state.currentChannelId = action.payload.currentChannelId;
+        state.channels = action.payload.channels || [];
+        state.currentChannelId = action.payload.currentChannelId || DEFAULT_CHANNEL_ID;
         state.status = 'idle';
       })
       .addCase(fetchData.rejected, (state) => {

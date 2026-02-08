@@ -1,17 +1,15 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 
-import channelsSlice from './slices/channelsSlice';
-import messagesSlice from './slices/messagesSlice';
-import modalSlice from './slices/modalSlice';
-
-const reducer = combineReducers({
-  channelsSlice,
-  messagesSlice,
-  modalSlice,
-});
+import channelsReducer from './slices/channelsSlice';
+import messagesReducer from './slices/messagesSlice';
+import modalReducer from './slices/modalSlice';
 
 const store = configureStore({
-  reducer,
+  reducer: {
+    channelsSlice: channelsReducer,
+    messagesSlice: messagesReducer,
+    modalSlice: modalReducer,
+  },
 });
 
 export default store;

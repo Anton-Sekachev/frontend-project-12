@@ -1,23 +1,26 @@
 import Modal from 'react-bootstrap/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import axios from 'axios';
+
 import { closeModal } from '../../../redux/slices/modalSlice';
 import { setActiveChannel } from '../../../redux/slices/channelsSlice';
-import SocketContext from '../../../Contexts/SocketContext.js';
 import useFilter from '../../../Hooks/useFilter';
 import selectors from '../../../redux/selectors';
 import ModalForm from './ModalForm';
 import getChannelNameSchema from './ChannelNameSchema';
+import useAuth from '../../../Hooks/useAuth';
 
 const AddChannel = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const filter = useFilter();
-  const socketApi = useContext(SocketContext);
   const inputRef = useRef(null);
+
+  const { getAuthHeader } = useAuth();
 
   const channelNames = useSelector(selectors.channelsNamesSelector);
   const ChannelNameSchema = getChannelNameSchema(channelNames);
@@ -37,12 +40,17 @@ const AddChannel = () => {
       const cleanName = filter.clean(values.channelName.trim());
 
       try {
-        const response = await socketApi.addChannel(cleanName);
+        const channelData = { name: cleanName };
+        const header = getAuthHeader();
+
+        const response = await axios.post('/api/v1/channels', channelData, { headers: header });
+
         const { data } = response;
 
         toast.success(t('channels.channelAdded'));
 
         dispatch(setActiveChannel(data.id));
+
         dispatch(closeModal());
         formik.resetForm();
       } catch (err) {
