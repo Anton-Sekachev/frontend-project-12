@@ -4,18 +4,21 @@ const currentChannelIdSelector = (state) => state.channelsSlice.currentChannelId
 const channelsSelector = (state) => state.channelsSlice.channels ?? [];
 
 const messagesSelector = createSelector(
-  [(state) => state.messagesSlice.messages, currentChannelIdSelector],
+  [
+    (state) => state.messagesSlice.messages,
+    currentChannelIdSelector,
+  ],
   (messages, currentChannelId) => {
     const allMessages = messages ?? [];
-    // Приведение к Number — самое важное здесь!
-    return allMessages.filter((message) => Number(message.channelId) === Number(currentChannelId));
+
+    return allMessages.filter((message) => String(message.channelId) === String(currentChannelId));
   },
 );
 
 const currentChannelNameSelector = createSelector(
   [channelsSelector, currentChannelIdSelector],
   (channels, currentChannelId) => {
-    const channel = channels.find((ch) => Number(ch.id) === Number(currentChannelId));
+    const channel = channels.find((ch) => String(ch.id) === String(currentChannelId));
     return channel?.name ?? 'general';
   },
 );
@@ -32,7 +35,7 @@ const channelsNamesSelector = createSelector(
 const channelNameSelector = (state) => {
   const channels = state.channelsSlice.channels ?? [];
   const channelId = state.modalSlice.data?.channelId;
-  const channel = channels.find((ch) => Number(ch.id) === Number(channelId));
+  const channel = channels.find((ch) => String(ch.id) === String(channelId));
   return channel?.name ?? '';
 };
 

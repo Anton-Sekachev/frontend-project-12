@@ -33,8 +33,7 @@ const Messages = () => {
   const currentChannelId = useSelector(selectors.currentChannelIdSelector);
   const currentChannelName = useSelector(selectors.currentChannelNameSelector);
   const messages = useSelector(selectors.messagesSelector);
-  const fullState = useSelector((state) => state);
-  console.log('DEBUG: ВЕСЬ Redux Стейт:', fullState);
+
   useEffect(() => {
     messageInputRef.current?.focus();
   }, [currentChannelId]);
@@ -46,26 +45,27 @@ const Messages = () => {
   const formik = useFormik({
     initialValues: { body: '' },
     validationSchema: MessageSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const cleanBody = filter.clean(values.body.trim());
+
       const newMessage = {
         body: cleanBody,
+        channelId: currentChannelId,
         username: user.username,
       };
 
       try {
         const header = getAuthHeader();
-        await axios.post(
-          `/api/v1/channels/${currentChannelId}/messages`,
-          newMessage,
-          { headers: header },
-        );
 
-        formik.resetForm();
+        await axios.post('/api/v1/messages', newMessage, {
+          headers: header,
+        });
+
+        resetForm();
         setTimeout(() => messageInputRef.current?.focus(), 0);
       } catch (error) {
         toast.error(t('errors.network'));
-        console.error(error);
+        console.error('Ошибка отправки:', error);
       }
     },
   });
@@ -82,7 +82,11 @@ const Messages = () => {
           </span>
         </div>
 
-        <div ref={messagesBoxRef} id="messages-box" className="chat-messages overflow-auto px-5">
+        <div
+          ref={messagesBoxRef}
+          id="messages-box"
+          className="chat-messages overflow-auto px-5"
+        >
           {messages.map((message) => (
             <Message message={message} key={message.id} />
           ))}

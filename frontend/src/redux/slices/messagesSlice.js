@@ -28,7 +28,8 @@ const messagesSlice = createSlice({
           state.messages = [];
           return;
         }
-        state.messages = state.messages.filter((message) => message.channelId !== payload.id);
+        // eslint-disable-next-line max-len
+        state.messages = state.messages.filter((message) => String(message.channelId) !== String(payload.id));
       });
   },
 });
