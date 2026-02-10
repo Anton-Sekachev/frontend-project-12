@@ -44,9 +44,14 @@ const channelsSlice = createSlice({
       .addCase(fetchData.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchData.fulfilled, (state, action) => {
-        state.channels = action.payload.channels || [];
-        state.currentChannelId = action.payload.currentChannelId || DEFAULT_CHANNEL_ID;
+      .addCase(fetchData.fulfilled, (state, { payload }) => {
+        if (typeof payload === 'string') {
+          state.status = 'failed';
+          return;
+        }
+
+        state.channels = payload.channels || [];
+        state.currentChannelId = payload.currentChannelId || DEFAULT_CHANNEL_ID;
         state.status = 'idle';
       })
       .addCase(fetchData.rejected, (state) => {
