@@ -1,6 +1,6 @@
 const rollbarConfig = {
 
-  accessToken: import.meta.env.VITE_ROLLBAR_TOKEN || 'your_token_here',
+  accessToken: import.meta.env.VITE_ROLLBAR_TOKEN,
   payload: {
     environment: 'production',
   },
