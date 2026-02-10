@@ -26,9 +26,6 @@ const ChatPage = () => {
     if (authHeader && authHeader.Authorization) {
       dispatch(fetchData(authHeader))
         .unwrap()
-        .then((data) => {
-          console.log('Данные успешно загружены:', data);
-        })
         .catch((error) => {
           console.error('Ошибка при загрузке данных:', error);
 

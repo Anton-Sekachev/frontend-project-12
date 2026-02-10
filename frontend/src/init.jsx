@@ -32,7 +32,6 @@ const Init = async () => {
   const { dispatch } = store;
 
   socket.on('newMessage', (payload) => {
-    console.log('1. SOCKET RECEIVED:', payload);
     dispatch(addMessage(payload));
   });
 
