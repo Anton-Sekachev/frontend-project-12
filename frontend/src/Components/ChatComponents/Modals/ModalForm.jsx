@@ -22,7 +22,7 @@ const ModalForm = ({ formik, onSubmit }) => {
     dispatch(closeModal());
   };
 
-  const errorText = t(formik.errors.channelName);
+  const errorText = formik.errors.channelName;
 
   return (
     <Form name="form" onSubmit={onSubmit}>

@@ -42,6 +42,7 @@ export default {
       channelName: 'Имя канала',
       addChannel: 'Добавить канал',
       removeChannelButton: 'Удалить',
+      confirmRemove: 'Вы действительно хотите удалить канал?',
       removeChannelTitle: 'Удалить канал',
       renameChannelButton: 'Переименовать',
       renameChannelTitle: 'Переименовать канал',

@@ -24,7 +24,8 @@ const RenameChannel = () => {
   const channelName = useSelector(selectors.channelNameSelector);
   const channelNames = useSelector(selectors.channelsNamesSelector);
 
-  const ChannelNameSchema = getChannelNameSchema(channelNames);
+  const otherChannelNames = channelNames.filter((name) => name !== channelName);
+  const ChannelNameSchema = getChannelNameSchema(otherChannelNames, t);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -52,7 +53,7 @@ const RenameChannel = () => {
         toast.success(t('channels.channelRenamed'));
       } catch (error) {
         console.error(error);
-        toast.error(t('errors.dataLoadingError'));
+        toast.error(t('errors.networkError'));
       }
     },
   });

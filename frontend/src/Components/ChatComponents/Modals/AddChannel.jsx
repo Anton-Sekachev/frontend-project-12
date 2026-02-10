@@ -23,7 +23,7 @@ const AddChannel = () => {
   const { getAuthHeader } = useAuth();
 
   const channelNames = useSelector(selectors.channelsNamesSelector);
-  const ChannelNameSchema = getChannelNameSchema(channelNames);
+  const ChannelNameSchema = getChannelNameSchema(channelNames, t);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -55,7 +55,7 @@ const AddChannel = () => {
         formik.resetForm();
       } catch (err) {
         console.error(err);
-        toast.error(t('errors.network'));
+        toast.error(t('errors.networkError'));
         setSubmitting(false);
       }
     },
