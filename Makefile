@@ -1,14 +1,13 @@
 install:
 	npm ci
-	cd frontend && npm install
+	npm install -C frontend
 
 build:
-	rm -rf frontend/build
-	cd frontend && npm install --include=dev && npm run build
-	npm ci
+	rm -rf frontend/dist
+	npm run build -C frontend
 
 start:
-	npx start-server -s ./frontend/build
+	npx start-server -s ./frontend/dist
 
 
 lint-frontend:
