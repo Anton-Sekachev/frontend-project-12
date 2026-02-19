@@ -1,14 +1,16 @@
 install:
 	npm ci
-	npm install -C frontend
+	cd frontend && npm install --production=false
 
 build:
 	rm -rf frontend/dist
-	npm run build -C frontend
+	cd frontend && npm run build
 
 start:
 	npx start-server -s ./frontend/dist
 
+lint:
+	npm run lint --prefix frontend
 
 lint-frontend:
 	make -C frontend lint
