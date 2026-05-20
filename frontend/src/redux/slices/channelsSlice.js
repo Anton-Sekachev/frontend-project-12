@@ -8,7 +8,7 @@ const initialState = {
   currentChannelId: null,
 };
 
-const DEFAULT_CHANNEL_ID = 1;
+const DEFAULT_CHANNEL_ID = '1';
 
 const channelsSlice = createSlice({
   name: 'channels',
@@ -45,13 +45,19 @@ const channelsSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchData.fulfilled, (state, { payload }) => {
-        if (typeof payload === 'string') {
-          state.status = 'failed';
-          return;
+        const incomingChannels = payload.channels ?? [];
+
+        // eslint-disable-next-line max-len
+        const hasGeneral = incomingChannels.some((channel) => String(channel.id) === DEFAULT_CHANNEL_ID);
+
+        if (!hasGeneral) {
+          const defaultChannel = { id: DEFAULT_CHANNEL_ID, name: 'general', removable: false };
+          state.channels = [defaultChannel, ...incomingChannels];
+        } else {
+          state.channels = incomingChannels;
         }
 
-        state.channels = payload.channels || [];
-        state.currentChannelId = payload.currentChannelId || DEFAULT_CHANNEL_ID;
+        state.currentChannelId = payload.currentChannelId ?? DEFAULT_CHANNEL_ID;
         state.status = 'idle';
       })
       .addCase(fetchData.rejected, (state) => {
