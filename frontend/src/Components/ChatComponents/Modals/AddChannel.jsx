@@ -7,7 +7,9 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 import { closeModal } from '../../../redux/slices/modalSlice';
+
 import { setActiveChannel } from '../../../redux/slices/channelsSlice';
+
 import useFilter from '../../../Hooks/useFilter';
 import selectors from '../../../redux/selectors';
 import ModalForm from './ModalForm';
@@ -44,12 +46,11 @@ const AddChannel = () => {
         const header = getAuthHeader();
 
         const response = await axios.post('/api/v1/channels', channelData, { headers: header });
-
         const { data } = response;
 
         toast.success(t('channels.channelAdded'));
 
-        dispatch(setActiveChannel(data.id));
+        dispatch(setActiveChannel(String(data.id)));
 
         dispatch(closeModal());
         formik.resetForm();

@@ -13,10 +13,9 @@ const Channels = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const channels = useSelector(selectors.channelsSelector) ?? [];
-  const defaultChannelId = 1;
+  const defaultChannelId = '1';
   const currentChannelId = useSelector(selectors.currentChannelIdSelector) ?? defaultChannelId;
   const lastChannelId = channels.length > 0 ? channels[channels.length - 1].id : null;
-
   useEffect(() => {
     if (!channels.length) return;
 

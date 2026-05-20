@@ -27,8 +27,13 @@ const Channel = ({ data, isCurrent }) => {
   return (
     <Nav.Item className="channel w-100">
       <Dropdown className="d-flex btn-group">
-        <Button variant={buttonVariant} className="w-100 rounded-0 text-start btn text-truncate" onClick={handleChannelClick}>
-          <span className="me-1">{`# ${data.name}`}</span>
+        <Button
+          variant={buttonVariant}
+          className="w-100 rounded-0 text-start btn text-truncate"
+          onClick={handleChannelClick}
+        >
+          <span className="me-1">#</span>
+          {data?.name}
         </Button>
         {data.removable && (
           <Dropdown.Toggle variant={buttonVariant} className="flex-grow-0 dropdown-toggle-split">
