@@ -9,6 +9,7 @@ import {
   addChannel,
   renameChannel,
   removeChannel,
+  setActiveChannel,
 } from './redux/slices/channelsSlice';
 import { addMessage } from './redux/slices/messagesSlice';
 
@@ -37,6 +38,7 @@ const Init = async () => {
 
   socket.on('newChannel', (payload) => {
     dispatch(addChannel(payload));
+    dispatch(setActiveChannel(String(payload.id)));
   });
 
   socket.on('renameChannel', (payload) => {
