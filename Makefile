@@ -1,6 +1,6 @@
 install:
 	npm ci
-	cd frontend && npm install --production=false
+	cd frontend && npm install --production=false --legacy-peer-deps
 
 build:
 	rm -rf frontend/dist
