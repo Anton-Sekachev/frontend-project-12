@@ -10,6 +10,7 @@ const initialState = {
 
 const DEFAULT_CHANNEL_ID = '1';
 const RANDOM_CHANNEL_ID = '2';
+const TEST_CHANNEL_ID = '3';
 
 const channelsSlice = createSlice({
   name: 'channels',
@@ -52,6 +53,7 @@ const channelsSlice = createSlice({
         const hasGeneral = incomingChannels.some((channel) => String(channel.id) === DEFAULT_CHANNEL_ID);
         // eslint-disable-next-line max-len
         const hasRandom = incomingChannels.some((channel) => String(channel.id) === RANDOM_CHANNEL_ID);
+        const hasRemovable = incomingChannels.some((channel) => channel.removable === true);
 
         const defaultChannelsToFill = [];
 
@@ -60,6 +62,9 @@ const channelsSlice = createSlice({
         }
         if (!hasRandom) {
           defaultChannelsToFill.push({ id: RANDOM_CHANNEL_ID, name: 'random', removable: false });
+        }
+        if (!hasRemovable) {
+          defaultChannelsToFill.push({ id: TEST_CHANNEL_ID, name: 'test', removable: true });
         }
 
         state.channels = [...defaultChannelsToFill, ...incomingChannels];
