@@ -9,6 +9,7 @@ const initialState = {
 };
 
 const DEFAULT_CHANNEL_ID = '1';
+const RANDOM_CHANNEL_ID = '2';
 
 const channelsSlice = createSlice({
   name: 'channels',
@@ -49,13 +50,19 @@ const channelsSlice = createSlice({
 
         // eslint-disable-next-line max-len
         const hasGeneral = incomingChannels.some((channel) => String(channel.id) === DEFAULT_CHANNEL_ID);
+        // eslint-disable-next-line max-len
+        const hasRandom = incomingChannels.some((channel) => String(channel.id) === RANDOM_CHANNEL_ID);
+
+        const defaultChannelsToFill = [];
 
         if (!hasGeneral) {
-          const defaultChannel = { id: DEFAULT_CHANNEL_ID, name: 'general', removable: false };
-          state.channels = [defaultChannel, ...incomingChannels];
-        } else {
-          state.channels = incomingChannels;
+          defaultChannelsToFill.push({ id: DEFAULT_CHANNEL_ID, name: 'general', removable: false });
         }
+        if (!hasRandom) {
+          defaultChannelsToFill.push({ id: RANDOM_CHANNEL_ID, name: 'random', removable: false });
+        }
+
+        state.channels = [...defaultChannelsToFill, ...incomingChannels];
 
         state.currentChannelId = payload.currentChannelId ?? DEFAULT_CHANNEL_ID;
         state.status = 'idle';
