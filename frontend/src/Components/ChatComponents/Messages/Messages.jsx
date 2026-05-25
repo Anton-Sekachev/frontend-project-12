@@ -12,7 +12,7 @@ import selectors from '../../../redux/selectors.js'
 import useAuth from '../../../Hooks/useAuth'
 import useFilter from '../../../Hooks/useFilter'
 
-const scrollToBottom = element => {
+const scrollToBottom = (element) => {
   if (element) {
     element.scrollTo(0, element.scrollHeight)
   }
@@ -64,7 +64,7 @@ const Messages = () => {
         resetForm()
         setTimeout(() => messageInputRef.current?.focus(), 0)
       }
- catch (error) {
+      catch (error) {
         toast.error(t('errors.network'))
         console.error('Ошибка отправки:', error)
       }

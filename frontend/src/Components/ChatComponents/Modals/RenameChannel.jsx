@@ -38,7 +38,7 @@ const RenameChannel = () => {
     validationSchema: ChannelNameSchema,
     validateOnChange: false,
     validateOnBlur: false,
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       try {
         const cleanName = filter.clean(values.channelName.trim())
         const header = getAuthHeader()
@@ -52,7 +52,7 @@ const RenameChannel = () => {
         dispatch(closeModal())
         toast.success(t('channels.channelRenamed'))
       }
- catch (error) {
+      catch (error) {
         console.error(error)
         toast.error(t('errors.networkError'))
       }

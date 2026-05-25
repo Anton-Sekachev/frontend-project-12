@@ -31,7 +31,7 @@ const channelsNamesSelector = createSelector(
   channels => (channels ? channels.map(ch => ch?.name ?? '').filter(Boolean) : []),
 )
 
-const channelNameSelector = state => {
+const channelNameSelector = (state) => {
   const channels = state.channelsSlice?.channels ?? []
   const channelId = state.modalSlice?.data?.channelId
   if (!channelId) return ''

@@ -24,7 +24,7 @@ const Channels = () => {
     if (currentChannelId === defaultChannelId) {
       animateScroll.scrollToTop(animateOptions)
     }
- else if (currentChannelId === lastChannelId) {
+    else if (currentChannelId === lastChannelId) {
       animateScroll.scrollToBottom(animateOptions)
     }
   }, [currentChannelId, lastChannelId, channels.length])

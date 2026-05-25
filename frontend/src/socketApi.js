@@ -4,10 +4,10 @@ export default socket => ({
       if (err) {
         reject(err)
       }
- else if (response?.status === 'ok') {
+      else if (response?.status === 'ok') {
         resolve(response.data)
       }
- else {
+      else {
         reject(new Error('Unknown error'))
       }
     })
@@ -20,10 +20,10 @@ export default socket => ({
       if (err) {
         reject(err)
       }
- else if (response?.status === 'ok') {
+      else if (response?.status === 'ok') {
         resolve(response.data)
       }
- else {
+      else {
         reject(new Error('Unknown error'))
       }
     })
@@ -34,10 +34,10 @@ export default socket => ({
       if (err) {
         reject(err)
       }
- else if (response?.status === 'ok') {
+      else if (response?.status === 'ok') {
         resolve(response.data)
       }
- else {
+      else {
         reject(new Error('Unknown error'))
       }
     })
@@ -48,10 +48,10 @@ export default socket => ({
       if (err) {
         reject(err)
       }
- else if (response?.status === 'ok') {
+      else if (response?.status === 'ok') {
         resolve(response.data)
       }
- else {
+      else {
         reject(new Error('Unknown error'))
       }
     })

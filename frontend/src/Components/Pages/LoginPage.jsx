@@ -25,7 +25,7 @@ const LoginForm = () => {
 
   const formik = useFormik({
     initialValues: { username: '', password: '' },
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       setAuthFailed(false)
       try {
         const { data } = await axios.post(routes.loginPath, values)
@@ -33,15 +33,15 @@ const LoginForm = () => {
         formik.resetForm()
         navigate(routes.chatPagePath)
       }
- catch (error) {
+      catch (error) {
         if (error.code === 'ERR_NETWORK') {
           toast.error(t('errors.networkError'))
         }
- else if (error.response?.status === 401) {
+        else if (error.response?.status === 401) {
           setAuthFailed(true)
           formik.setFieldError('password', t('errors.wrongAuthData'))
         }
- else {
+        else {
           toast.error(t('errors.dataLoadingError'))
         }
       }
