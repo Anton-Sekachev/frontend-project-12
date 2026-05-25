@@ -5,12 +5,7 @@ import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import { Provider as ReduxProvider } from 'react-redux';
 import { io } from 'socket.io-client';
 
-import {
-  addChannel,
-  renameChannel,
-  removeChannel,
-  setActiveChannel,
-} from './redux/slices/channelsSlice';
+import { addChannel, renameChannel, removeChannel } from './redux/slices/channelsSlice';
 import { addMessage } from './redux/slices/messagesSlice';
 
 import App from './App';
@@ -28,6 +23,18 @@ const Init = async () => {
     },
   });
 
+  socket.on('connect', () => {
+    console.log('=== [Socket.io] Успешно подключено! ID сессии:', socket.id);
+  });
+
+  socket.on('connect_error', (err) => {
+    console.error('=== [Socket.io] ОШИБКА ПОДКЛЮЧЕНИЯ:', err.message);
+  });
+
+  socket.on('disconnect', (reason) => {
+    console.warn('=== [Socket.io] Соединение потеряно. Причина:', reason);
+  });
+
   const socketApi = getSocketApi(socket);
   const i18n = i18next.createInstance();
   const { dispatch } = store;
@@ -38,7 +45,6 @@ const Init = async () => {
 
   socket.on('newChannel', (payload) => {
     dispatch(addChannel(payload));
-    dispatch(setActiveChannel(String(payload.id)));
   });
 
   socket.on('renameChannel', (payload) => {

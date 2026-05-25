@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import Modal from 'react-bootstrap/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
@@ -7,9 +8,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 import { closeModal } from '../../../redux/slices/modalSlice';
-
 import { setActiveChannel } from '../../../redux/slices/channelsSlice';
-
 import useFilter from '../../../Hooks/useFilter';
 import selectors from '../../../redux/selectors';
 import ModalForm from './ModalForm';
@@ -50,12 +49,14 @@ const AddChannel = () => {
 
         toast.success(t('channels.channelAdded'));
 
-        dispatch(setActiveChannel(String(data.id)));
+        if (data?.id) {
+          dispatch(setActiveChannel(String(data.id)));
+        }
 
         dispatch(closeModal());
         formik.resetForm();
       } catch (err) {
-        console.error(err);
+        console.error('[AddChannel HTTP-ошибка]:', err);
         toast.error(t('errors.networkError'));
         setSubmitting(false);
       }
