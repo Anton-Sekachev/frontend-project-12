@@ -26,7 +26,6 @@ const messagesSlice = createSlice({
           state.messages = []
           return
         }
-        // eslint-disable-next-line max-len
         state.messages = state.messages.filter(message => String(message.channelId) !== String(payload.id))
       })
   },
