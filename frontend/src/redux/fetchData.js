@@ -14,7 +14,8 @@ const fetchData = createAsyncThunk(
         channels: response.data,
         currentChannelId: response.data[0]?.id || '1',
       }
-    } catch (error) {
+    }
+ catch (error) {
       console.error('[fetchData] Ошибка при запросе к /api/v1/channels:', error)
       return rejectWithValue(error.response?.data || error.message)
     }

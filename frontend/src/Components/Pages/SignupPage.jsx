@@ -40,13 +40,14 @@ const SignupPage = () => {
   const formik = useFormik({
     initialValues: { username: '', password: '', passwordConfirm: '' },
     validationSchema: SignupSchema,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       const { username, password } = values
       try {
         const { data } = await axios.post(routes.signupPath, { username, password })
         logIn(data)
         navigate(routes.chatPagePath)
-      } catch (error) {
+      }
+ catch (error) {
         switch (error.code) {
           case 'ERR_BAD_REQUEST':
             formik.setFieldError('username', t('errors.userConflict'))

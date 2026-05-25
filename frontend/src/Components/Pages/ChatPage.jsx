@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -26,16 +25,18 @@ const ChatPage = () => {
     if (authHeader && authHeader.Authorization) {
       dispatch(fetchData(authHeader))
         .unwrap()
-        .catch((error) => {
+        .catch(error => {
           console.error('Ошибка при загрузке данных:', error)
 
           if (error?.status === 401 || error?.status === 404) {
             logOut()
-          } else {
+          }
+          else {
             toast.error(t('errors.dataLoadingError'))
           }
         })
-    } else {
+    }
+    else {
       console.warn('Запрос не отправлен: отсутствует токен в getAuthHeader')
     }
   }, [dispatch, getAuthHeader, logOut, t])

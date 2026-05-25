@@ -27,11 +27,11 @@ const Init = async () => {
     console.log('=== [Socket.io] Успешно подключено! ID сессии:', socket.id)
   })
 
-  socket.on('connect_error', (err) => {
+  socket.on('connect_error', err => {
     console.error('=== [Socket.io] ОШИБКА ПОДКЛЮЧЕНИЯ:', err.message)
   })
 
-  socket.on('disconnect', (reason) => {
+  socket.on('disconnect', reason => {
     console.warn('=== [Socket.io] Соединение потеряно. Причина:', reason)
   })
 
@@ -39,19 +39,19 @@ const Init = async () => {
   const i18n = i18next.createInstance()
   const { dispatch } = store
 
-  socket.on('newMessage', (payload) => {
+  socket.on('newMessage', payload => {
     dispatch(addMessage(payload))
   })
 
-  socket.on('newChannel', (payload) => {
+  socket.on('newChannel', payload => {
     dispatch(addChannel(payload))
   })
 
-  socket.on('renameChannel', (payload) => {
+  socket.on('renameChannel', payload => {
     dispatch(renameChannel(payload))
   })
 
-  socket.on('removeChannel', (payload) => {
+  socket.on('removeChannel', payload => {
     dispatch(removeChannel({ id: payload.id }))
   })
 

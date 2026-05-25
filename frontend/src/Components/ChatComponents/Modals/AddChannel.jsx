@@ -55,7 +55,8 @@ const AddChannel = () => {
 
         dispatch(closeModal())
         formik.resetForm()
-      } catch (err) {
+      }
+ catch (err) {
         console.error('[AddChannel HTTP-ошибка]:', err)
         toast.error(t('errors.networkError'))
         setSubmitting(false)

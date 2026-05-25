@@ -23,7 +23,8 @@ const Channels = () => {
 
     if (currentChannelId === defaultChannelId) {
       animateScroll.scrollToTop(animateOptions)
-    } else if (currentChannelId === lastChannelId) {
+    }
+ else if (currentChannelId === lastChannelId) {
       animateScroll.scrollToBottom(animateOptions)
     }
   }, [currentChannelId, lastChannelId, channels.length])
@@ -49,7 +50,7 @@ const Channels = () => {
         </div>
         <Nav id="channels-list" className="flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
           {
-            channels.map((data) => (
+            channels.map(data => (
               <Channel
                 key={data.id}
                 data={data}

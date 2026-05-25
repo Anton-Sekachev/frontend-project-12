@@ -2,7 +2,7 @@ import Form from 'react-bootstrap/Form'
 import FloatingLabel from 'react-bootstrap/esm/FloatingLabel'
 import { useTranslation } from 'react-i18next'
 
-const FormInput = (props) => {
+const FormInput = props => {
   const {
     formik,
     field,

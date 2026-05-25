@@ -24,7 +24,7 @@ const RenameChannel = () => {
   const channelName = useSelector(selectors.channelNameSelector)
   const channelNames = useSelector(selectors.channelsNamesSelector)
 
-  const otherChannelNames = channelNames.filter((name) => name !== channelName)
+  const otherChannelNames = channelNames.filter(name => name !== channelName)
   const ChannelNameSchema = getChannelNameSchema(otherChannelNames, t)
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const RenameChannel = () => {
     validationSchema: ChannelNameSchema,
     validateOnChange: false,
     validateOnBlur: false,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const cleanName = filter.clean(values.channelName.trim())
         const header = getAuthHeader()
@@ -51,7 +51,8 @@ const RenameChannel = () => {
 
         dispatch(closeModal())
         toast.success(t('channels.channelRenamed'))
-      } catch (error) {
+      }
+ catch (error) {
         console.error(error)
         toast.error(t('errors.networkError'))
       }

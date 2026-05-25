@@ -7,14 +7,15 @@ const AuthProvider = ({ children }) => {
     if (savedUser) {
       try {
         return JSON.parse(savedUser)
-      } catch (e) {
+      }
+      catch {
         return null
       }
     }
     return null
   })
 
-  const logIn = useCallback((userData) => {
+  const logIn = useCallback(userData => {
     localStorage.setItem('user', JSON.stringify(userData))
     setUser(userData)
   }, [])

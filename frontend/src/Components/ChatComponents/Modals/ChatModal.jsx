@@ -12,7 +12,7 @@ const modalTypes = {
   removeChannel: RemoveChannel,
 }
 
-const setModalType = (type) => modalTypes[type]
+const setModalType = type => modalTypes[type]
 
 const ChatModal = () => {
   const dispatch = useDispatch()

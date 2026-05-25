@@ -18,7 +18,7 @@ const messagesSlice = createSlice({
       state.messages.push(payload)
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(fetchData.fulfilled, (state, { payload }) => {
         state.messages = payload.messages || []
@@ -29,7 +29,7 @@ const messagesSlice = createSlice({
           return
         }
         // eslint-disable-next-line max-len
-        state.messages = state.messages.filter((message) => String(message.channelId) !== String(payload.id))
+        state.messages = state.messages.filter(message => String(message.channelId) !== String(payload.id))
       })
   },
 })
