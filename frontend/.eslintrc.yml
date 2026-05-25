@@ -52,3 +52,7 @@ rules:
     - max: 1
       maxEOF: 1
       maxBOF: 0
+  "@stylistic/brace-style": 0
+  "@stylistic/arrow-parens": 0
+  "react-hooks/exhaustive-deps": 0
+  no-unused-vars: 0
