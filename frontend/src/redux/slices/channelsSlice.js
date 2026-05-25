@@ -9,24 +9,19 @@ const initialState = {
 };
 
 const DEFAULT_CHANNEL_ID = '1';
-const RANDOM_CHANNEL_ID = '2';
-const TEST_CHANNEL_ID = '3';
 
 const channelsSlice = createSlice({
   name: 'channels',
   initialState,
   reducers: {
     addChannel(state, { payload }) {
-      if (!state.channels) {
-        state.channels = [];
-      }
+      if (!state.channels) state.channels = [];
       state.channels.push(payload);
     },
     renameChannel(state, { payload }) {
-      const { id, name } = payload;
-      const channel = state.channels?.find((c) => c.id === id);
+      const channel = state.channels?.find((c) => c.id === payload.id);
       if (channel) {
-        channel.name = name;
+        channel.name = payload.name;
       }
     },
     removeChannel(state, { payload }) {
@@ -47,32 +42,14 @@ const channelsSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchData.fulfilled, (state, { payload }) => {
-        const incomingChannels = payload.channels ?? [];
+        console.log('[Загрузка данных] Ответ от бэкенда:', payload); // не забыть удалить
 
-        // eslint-disable-next-line max-len
-        const hasGeneral = incomingChannels.some((channel) => String(channel.id) === DEFAULT_CHANNEL_ID);
-        // eslint-disable-next-line max-len
-        const hasRandom = incomingChannels.some((channel) => String(channel.id) === RANDOM_CHANNEL_ID);
-        const hasRemovable = incomingChannels.some((channel) => channel.removable === true);
-
-        const defaultChannelsToFill = [];
-
-        if (!hasGeneral) {
-          defaultChannelsToFill.push({ id: DEFAULT_CHANNEL_ID, name: 'general', removable: false });
-        }
-        if (!hasRandom) {
-          defaultChannelsToFill.push({ id: RANDOM_CHANNEL_ID, name: 'random', removable: false });
-        }
-        if (!hasRemovable) {
-          defaultChannelsToFill.push({ id: TEST_CHANNEL_ID, name: 'test', removable: true });
-        }
-
-        state.channels = [...defaultChannelsToFill, ...incomingChannels];
-
+        state.channels = payload.channels ?? [];
         state.currentChannelId = payload.currentChannelId ?? DEFAULT_CHANNEL_ID;
         state.status = 'idle';
       })
-      .addCase(fetchData.rejected, (state) => {
+      .addCase(fetchData.rejected, (state, action) => {
+        console.error('[Загрузка данных] Ошибка:', action.error);
         state.status = 'failed';
       });
   },
