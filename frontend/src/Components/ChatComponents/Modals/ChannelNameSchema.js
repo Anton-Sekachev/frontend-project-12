@@ -1,4 +1,4 @@
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 
 export default (channelNames, t) => {
   const ChannelNameSchema = Yup.object().shape({
@@ -9,9 +9,9 @@ export default (channelNames, t) => {
       .max(20, t('errors.shouldHaveLength'))
       .notOneOf(channelNames, t('errors.shouldBeUniq'))
       .required(t('errors.required')),
-  });
+  })
 
-  ChannelNameSchema.ValidationError = Yup.ValidationError;
+  ChannelNameSchema.ValidationError = Yup.ValidationError
 
-  return ChannelNameSchema;
-};
+  return ChannelNameSchema
+}

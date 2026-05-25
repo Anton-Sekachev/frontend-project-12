@@ -1,12 +1,12 @@
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import { useTranslation } from 'react-i18next';
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import { useTranslation } from 'react-i18next'
 
 const ModalFooter = ({ handleModalHide, isDisabled, submitButtonVariant }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   const submitButtonText = submitButtonVariant === 'success'
     ? t('modals.sendButton')
-    : t('modals.removeButton');
+    : t('modals.removeButton')
 
   return (
     <Modal.Footer>
@@ -17,7 +17,7 @@ const ModalFooter = ({ handleModalHide, isDisabled, submitButtonVariant }) => {
         {submitButtonText}
       </Button>
     </Modal.Footer>
-  );
-};
+  )
+}
 
-export default ModalFooter;
+export default ModalFooter

@@ -1,9 +1,9 @@
-import ReactDOM from 'react-dom/client';
-import init from './init';
+import ReactDOM from 'react-dom/client'
+import init from './init'
 
 const app = async () => {
-  const root = ReactDOM.createRoot(document.getElementById('chat'));
-  root.render(await init());
-};
+  const root = ReactDOM.createRoot(document.getElementById('chat'))
+  root.render(await init())
+}
 
-app();
+app()

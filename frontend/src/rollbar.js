@@ -6,6 +6,6 @@ const rollbarConfig = {
   },
   captureUncaught: true,
   captureUnhandledRejections: true,
-};
+}
 
-export default rollbarConfig;
+export default rollbarConfig

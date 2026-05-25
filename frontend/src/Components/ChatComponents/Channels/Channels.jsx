@@ -1,35 +1,35 @@
-import { Button, Nav } from 'react-bootstrap';
-import { FaRegSquarePlus } from 'react-icons/fa6';
-import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
-import { animateScroll } from 'react-scroll';
-import { openModal } from '../../../redux/slices/modalSlice.js';
-import Channel from './Channel.jsx';
-import ChatModal from '../Modals/ChatModal';
-import selectors from '../../../redux/selectors.js';
+import { Button, Nav } from 'react-bootstrap'
+import { FaRegSquarePlus } from 'react-icons/fa6'
+import { useSelector, useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
+import { animateScroll } from 'react-scroll'
+import { openModal } from '../../../redux/slices/modalSlice.js'
+import Channel from './Channel.jsx'
+import ChatModal from '../Modals/ChatModal'
+import selectors from '../../../redux/selectors.js'
 
 const Channels = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const channels = useSelector(selectors.channelsSelector) ?? [];
-  const defaultChannelId = '1';
-  const currentChannelId = useSelector(selectors.currentChannelIdSelector) ?? defaultChannelId;
-  const lastChannelId = channels.length > 0 ? channels[channels.length - 1].id : null;
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const channels = useSelector(selectors.channelsSelector) ?? []
+  const defaultChannelId = '1'
+  const currentChannelId = useSelector(selectors.currentChannelIdSelector) ?? defaultChannelId
+  const lastChannelId = channels.length > 0 ? channels[channels.length - 1].id : null
   useEffect(() => {
-    if (!channels.length) return;
+    if (!channels.length) return
 
-    const animateOptions = { containerId: 'channels-list', delay: 0, offset: 50 };
+    const animateOptions = { containerId: 'channels-list', delay: 0, offset: 50 }
 
     if (currentChannelId === defaultChannelId) {
-      animateScroll.scrollToTop(animateOptions);
+      animateScroll.scrollToTop(animateOptions)
     } else if (currentChannelId === lastChannelId) {
-      animateScroll.scrollToBottom(animateOptions);
+      animateScroll.scrollToBottom(animateOptions)
     }
-  }, [currentChannelId, lastChannelId, channels.length]);
+  }, [currentChannelId, lastChannelId, channels.length])
   const handleOpenModal = () => {
-    dispatch(openModal({ type: 'addChannel' }));
-  };
+    dispatch(openModal({ type: 'addChannel' }))
+  }
 
   return (
     <>
@@ -60,7 +60,7 @@ const Channels = () => {
         </Nav>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Channels;
+export default Channels

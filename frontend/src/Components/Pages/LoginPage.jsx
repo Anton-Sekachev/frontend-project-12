@@ -1,49 +1,49 @@
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/esm/Col';
-import Row from 'react-bootstrap/Row';
-import Form from 'react-bootstrap/Form';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, Link } from 'react-router-dom';
-import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import FormInput from './FormInput';
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
+import Container from 'react-bootstrap/Container'
+import Col from 'react-bootstrap/esm/Col'
+import Row from 'react-bootstrap/Row'
+import Form from 'react-bootstrap/Form'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, Link } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { toast } from 'react-toastify'
+import axios from 'axios'
+import FormInput from './FormInput'
 
-import useAuth from '../../Hooks/useAuth';
-import routes from '../../routes';
+import useAuth from '../../Hooks/useAuth'
+import routes from '../../routes'
 
-import loginImage from '../../Images/login.svg';
+import loginImage from '../../Images/login.svg'
 
 const LoginForm = () => {
-  const { t } = useTranslation();
-  const { logIn } = useAuth();
-  const [authFailed, setAuthFailed] = useState(false);
-  const navigate = useNavigate();
+  const { t } = useTranslation()
+  const { logIn } = useAuth()
+  const [authFailed, setAuthFailed] = useState(false)
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: { username: '', password: '' },
     onSubmit: async (values) => {
-      setAuthFailed(false);
+      setAuthFailed(false)
       try {
-        const { data } = await axios.post(routes.loginPath, values);
-        logIn(data);
-        formik.resetForm();
-        navigate(routes.chatPagePath);
+        const { data } = await axios.post(routes.loginPath, values)
+        logIn(data)
+        formik.resetForm()
+        navigate(routes.chatPagePath)
       } catch (error) {
         if (error.code === 'ERR_NETWORK') {
-          toast.error(t('errors.networkError'));
+          toast.error(t('errors.networkError'))
         } else if (error.response?.status === 401) {
-          setAuthFailed(true);
-          formik.setFieldError('password', t('errors.wrongAuthData'));
+          setAuthFailed(true)
+          formik.setFieldError('password', t('errors.wrongAuthData'))
         } else {
-          toast.error(t('errors.dataLoadingError'));
+          toast.error(t('errors.dataLoadingError'))
         }
       }
     },
-  });
+  })
 
   return (
     <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
@@ -71,11 +71,11 @@ const LoginForm = () => {
         </Button>
       </fieldset>
     </Form>
-  );
-};
+  )
+}
 
 const LoginPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <Container className="h-100" fluid>
@@ -98,7 +98,7 @@ const LoginPage = () => {
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

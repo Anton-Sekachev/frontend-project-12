@@ -1,74 +1,74 @@
-import { Form, Button } from 'react-bootstrap';
-import { IoSendSharp } from 'react-icons/io5';
-import { useSelector } from 'react-redux';
-import { useRef, useEffect } from 'react';
-import { useFormik } from 'formik';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import * as Yup from 'yup';
-import Message from './Message.jsx';
-import selectors from '../../../redux/selectors.js';
-import useAuth from '../../../Hooks/useAuth';
-import useFilter from '../../../Hooks/useFilter';
+import { Form, Button } from 'react-bootstrap'
+import { IoSendSharp } from 'react-icons/io5'
+import { useSelector } from 'react-redux'
+import { useRef, useEffect } from 'react'
+import { useFormik } from 'formik'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import axios from 'axios'
+import * as Yup from 'yup'
+import Message from './Message.jsx'
+import selectors from '../../../redux/selectors.js'
+import useAuth from '../../../Hooks/useAuth'
+import useFilter from '../../../Hooks/useFilter'
 
 const scrollToBottom = (element) => {
   if (element) {
-    element.scrollTo(0, element.scrollHeight);
+    element.scrollTo(0, element.scrollHeight)
   }
-};
+}
 
 const MessageSchema = Yup.object().shape({
   body: Yup.string().trim().min(1).required(),
-});
+})
 
 const Messages = () => {
-  const { t } = useTranslation();
-  const messagesBoxRef = useRef();
-  const messageInputRef = useRef();
-  const filter = useFilter();
+  const { t } = useTranslation()
+  const messagesBoxRef = useRef()
+  const messageInputRef = useRef()
+  const filter = useFilter()
 
-  const { getAuthHeader, user } = useAuth();
+  const { getAuthHeader, user } = useAuth()
 
-  const currentChannelId = useSelector(selectors.currentChannelIdSelector);
-  const currentChannelName = useSelector(selectors.currentChannelNameSelector);
-  const messages = useSelector(selectors.messagesSelector);
-
-  useEffect(() => {
-    messageInputRef.current?.focus();
-  }, [currentChannelId]);
+  const currentChannelId = useSelector(selectors.currentChannelIdSelector)
+  const currentChannelName = useSelector(selectors.currentChannelNameSelector)
+  const messages = useSelector(selectors.messagesSelector)
 
   useEffect(() => {
-    scrollToBottom(messagesBoxRef.current);
-  }, [messages]);
+    messageInputRef.current?.focus()
+  }, [currentChannelId])
+
+  useEffect(() => {
+    scrollToBottom(messagesBoxRef.current)
+  }, [messages])
 
   const formik = useFormik({
     initialValues: { body: '' },
     validationSchema: MessageSchema,
     onSubmit: async (values, { resetForm }) => {
-      const cleanBody = filter.clean(values.body.trim());
+      const cleanBody = filter.clean(values.body.trim())
 
       const newMessage = {
         body: cleanBody,
         channelId: currentChannelId,
         username: user.username,
-      };
+      }
 
       try {
-        const header = getAuthHeader();
+        const header = getAuthHeader()
 
         await axios.post('/api/v1/messages', newMessage, {
           headers: header,
-        });
+        })
 
-        resetForm();
-        setTimeout(() => messageInputRef.current?.focus(), 0);
+        resetForm()
+        setTimeout(() => messageInputRef.current?.focus(), 0)
       } catch (error) {
-        toast.error(t('errors.network'));
-        console.error('Ошибка отправки:', error);
+        toast.error(t('errors.network'))
+        console.error('Ошибка отправки:', error)
       }
     },
-  });
+  })
 
   return (
     <div className="col p-0 h-100">
@@ -128,7 +128,7 @@ const Messages = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Messages;
+export default Messages

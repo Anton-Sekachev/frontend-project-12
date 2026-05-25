@@ -1,4 +1,4 @@
-const API_URL = '/api/v1';
+const API_URL = '/api/v1'
 
 export default {
   loginPath: `${API_URL}/login`,
@@ -8,4 +8,4 @@ export default {
   loginPagePath: '/login',
   signupPagePath: '/signup',
   channelsPath: `${API_URL}/channels`,
-};
+}

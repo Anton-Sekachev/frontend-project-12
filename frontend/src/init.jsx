@@ -1,19 +1,19 @@
-import React from 'react';
-import i18next from 'i18next';
-import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
-import { Provider as ReduxProvider } from 'react-redux';
-import { io } from 'socket.io-client';
+import React from 'react'
+import i18next from 'i18next'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
+import { Provider as ReduxProvider } from 'react-redux'
+import { io } from 'socket.io-client'
 
-import { addChannel, renameChannel, removeChannel } from './redux/slices/channelsSlice';
-import { addMessage } from './redux/slices/messagesSlice';
+import { addChannel, renameChannel, removeChannel } from './redux/slices/channelsSlice'
+import { addMessage } from './redux/slices/messagesSlice'
 
-import App from './App';
-import resources from './locales';
-import rollbarConfig from './rollbar';
-import store from './redux';
-import SocketContext from './Contexts/SocketContext';
-import getSocketApi from './socketApi';
+import App from './App'
+import resources from './locales'
+import rollbarConfig from './rollbar'
+import store from './redux'
+import SocketContext from './Contexts/SocketContext'
+import getSocketApi from './socketApi'
 
 const Init = async () => {
   const socket = io({
@@ -21,46 +21,46 @@ const Init = async () => {
     auth: {
       token: JSON.parse(localStorage.getItem('user') || '{}').token,
     },
-  });
+  })
 
   socket.on('connect', () => {
-    console.log('=== [Socket.io] Успешно подключено! ID сессии:', socket.id);
-  });
+    console.log('=== [Socket.io] Успешно подключено! ID сессии:', socket.id)
+  })
 
   socket.on('connect_error', (err) => {
-    console.error('=== [Socket.io] ОШИБКА ПОДКЛЮЧЕНИЯ:', err.message);
-  });
+    console.error('=== [Socket.io] ОШИБКА ПОДКЛЮЧЕНИЯ:', err.message)
+  })
 
   socket.on('disconnect', (reason) => {
-    console.warn('=== [Socket.io] Соединение потеряно. Причина:', reason);
-  });
+    console.warn('=== [Socket.io] Соединение потеряно. Причина:', reason)
+  })
 
-  const socketApi = getSocketApi(socket);
-  const i18n = i18next.createInstance();
-  const { dispatch } = store;
+  const socketApi = getSocketApi(socket)
+  const i18n = i18next.createInstance()
+  const { dispatch } = store
 
   socket.on('newMessage', (payload) => {
-    dispatch(addMessage(payload));
-  });
+    dispatch(addMessage(payload))
+  })
 
   socket.on('newChannel', (payload) => {
-    dispatch(addChannel(payload));
-  });
+    dispatch(addChannel(payload))
+  })
 
   socket.on('renameChannel', (payload) => {
-    dispatch(renameChannel(payload));
-  });
+    dispatch(renameChannel(payload))
+  })
 
   socket.on('removeChannel', (payload) => {
-    dispatch(removeChannel({ id: payload.id }));
-  });
+    dispatch(removeChannel({ id: payload.id }))
+  })
 
   await i18n.use(initReactI18next).init({
     resources,
     lng: 'ru',
     fallbackLng: 'ru',
     debug: false,
-  });
+  })
 
   return (
     <React.StrictMode>
@@ -76,7 +76,7 @@ const Init = async () => {
         </ErrorBoundary>
       </RollbarProvider>
     </React.StrictMode>
-  );
-};
+  )
+}
 
-export default Init;
+export default Init

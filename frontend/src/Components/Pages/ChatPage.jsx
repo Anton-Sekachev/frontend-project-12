@@ -1,44 +1,44 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-import Container from 'react-bootstrap/Container';
-import Spinner from 'react-bootstrap/Spinner';
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import Container from 'react-bootstrap/Container'
+import Spinner from 'react-bootstrap/Spinner'
 
-import Channels from '../ChatComponents/Channels/Channels';
-import Messages from '../ChatComponents/Messages/Messages';
-import fetchData from '../../redux/fetchData';
-import useAuth from '../../Hooks/useAuth';
-import selectors from '../../redux/selectors';
+import Channels from '../ChatComponents/Channels/Channels'
+import Messages from '../ChatComponents/Messages/Messages'
+import fetchData from '../../redux/fetchData'
+import useAuth from '../../Hooks/useAuth'
+import selectors from '../../redux/selectors'
 
 const ChatPage = () => {
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
 
-  const { logOut, getAuthHeader } = useAuth();
+  const { logOut, getAuthHeader } = useAuth()
 
-  const status = useSelector(selectors.statusSelector);
+  const status = useSelector(selectors.statusSelector)
 
   useEffect(() => {
-    const authHeader = getAuthHeader();
+    const authHeader = getAuthHeader()
 
     if (authHeader && authHeader.Authorization) {
       dispatch(fetchData(authHeader))
         .unwrap()
         .catch((error) => {
-          console.error('Ошибка при загрузке данных:', error);
+          console.error('Ошибка при загрузке данных:', error)
 
           if (error?.status === 401 || error?.status === 404) {
-            logOut();
+            logOut()
           } else {
-            toast.error(t('errors.dataLoadingError'));
+            toast.error(t('errors.dataLoadingError'))
           }
-        });
+        })
     } else {
-      console.warn('Запрос не отправлен: отсутствует токен в getAuthHeader');
+      console.warn('Запрос не отправлен: отсутствует токен в getAuthHeader')
     }
-  }, [dispatch, getAuthHeader, logOut, t]);
+  }, [dispatch, getAuthHeader, logOut, t])
 
   if (status === 'loading') {
     return (
@@ -49,7 +49,7 @@ const ChatPage = () => {
           </Spinner>
         </div>
       </Container>
-    );
+    )
   }
 
   return (
@@ -59,7 +59,7 @@ const ChatPage = () => {
         <Messages />
       </div>
     </Container>
-  );
-};
+  )
+}
 
-export default ChatPage;
+export default ChatPage

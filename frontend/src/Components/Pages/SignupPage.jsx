@@ -1,20 +1,20 @@
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import { useFormik } from 'formik';
-import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-import * as Yup from 'yup';
-import axios from 'axios';
-import FormInput from './FormInput';
-import useAuth from '../../Hooks/useAuth';
-import routes from '../../routes';
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
+import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
+import { useFormik } from 'formik'
+import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import * as Yup from 'yup'
+import axios from 'axios'
+import FormInput from './FormInput'
+import useAuth from '../../Hooks/useAuth'
+import routes from '../../routes'
 
-import signupImage from '../../Images/signup.svg';
+import signupImage from '../../Images/signup.svg'
 
 const SignupSchema = Yup.object().shape({
   username: Yup
@@ -30,37 +30,37 @@ const SignupSchema = Yup.object().shape({
   passwordConfirm: Yup
     .string()
     .when('password', (password, field) => password && field.oneOf([Yup.ref('password')], 'errors.passwordsShouldBeEqual')),
-});
+})
 
 const SignupPage = () => {
-  const { t } = useTranslation();
-  const { logIn } = useAuth();
-  const navigate = useNavigate();
+  const { t } = useTranslation()
+  const { logIn } = useAuth()
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: { username: '', password: '', passwordConfirm: '' },
     validationSchema: SignupSchema,
     onSubmit: async (values) => {
-      const { username, password } = values;
+      const { username, password } = values
       try {
-        const { data } = await axios.post(routes.signupPath, { username, password });
-        logIn(data);
-        navigate(routes.chatPagePath);
+        const { data } = await axios.post(routes.signupPath, { username, password })
+        logIn(data)
+        navigate(routes.chatPagePath)
       } catch (error) {
         switch (error.code) {
           case 'ERR_BAD_REQUEST':
-            formik.setFieldError('username', t('errors.userConflict'));
-            break;
+            formik.setFieldError('username', t('errors.userConflict'))
+            break
           case 'ERR_NETWORK':
-            toast.error(t('errors.networkError'));
-            break;
+            toast.error(t('errors.networkError'))
+            break
           default:
-            toast.error(error.message);
-            break;
+            toast.error(error.message)
+            break
         }
       }
     },
-  });
+  })
 
   return (
     <Container className="h-100" fluid>
@@ -112,7 +112,7 @@ const SignupPage = () => {
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default SignupPage;
+export default SignupPage

@@ -1,38 +1,38 @@
-import Modal from 'react-bootstrap/Modal';
-import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
-import axios from 'axios';
+import Modal from 'react-bootstrap/Modal'
+import { useSelector, useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useFormik } from 'formik'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
-import { closeModal } from '../../../redux/slices/modalSlice';
-import selectors from '../../../redux/selectors';
-import ModalFooter from './ModalFooter';
-import useAuth from '../../../Hooks/useAuth';
+import { closeModal } from '../../../redux/slices/modalSlice'
+import selectors from '../../../redux/selectors'
+import ModalFooter from './ModalFooter'
+import useAuth from '../../../Hooks/useAuth'
 
 const RemoveChannel = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const { getAuthHeader } = useAuth();
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const { getAuthHeader } = useAuth()
 
-  const channelId = useSelector(selectors.modalChannelIdSelector);
+  const channelId = useSelector(selectors.modalChannelIdSelector)
 
   const formik = useFormik({
     initialValues: {},
     onSubmit: async () => {
       try {
-        const header = getAuthHeader();
+        const header = getAuthHeader()
 
-        await axios.delete(`/api/v1/channels/${channelId}`, { headers: header });
+        await axios.delete(`/api/v1/channels/${channelId}`, { headers: header })
 
-        toast.success(t('channels.channelRemoved'));
-        dispatch(closeModal());
+        toast.success(t('channels.channelRemoved'))
+        dispatch(closeModal())
       } catch (error) {
-        console.error('Delete error:', error);
-        toast.error(t('errors.network'));
+        console.error('Delete error:', error)
+        toast.error(t('errors.network'))
       }
     },
-  });
+  })
 
   return (
     <>
@@ -50,7 +50,7 @@ const RemoveChannel = () => {
         />
       </form>
     </>
-  );
-};
+  )
+}
 
-export default RemoveChannel;
+export default RemoveChannel

@@ -1,6 +1,6 @@
-import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
-import { useTranslation } from 'react-i18next';
+import Form from 'react-bootstrap/Form'
+import FloatingLabel from 'react-bootstrap/esm/FloatingLabel'
+import { useTranslation } from 'react-i18next'
 
 const FormInput = (props) => {
   const {
@@ -11,11 +11,11 @@ const FormInput = (props) => {
     placeholder,
     autoFocus,
     isInvalid,
-  } = props;
+  } = props
 
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const errorText = t(formik.errors[field]);
+  const errorText = t(formik.errors[field])
 
   return (
     <Form.Group className="form-floating mb-3">
@@ -35,7 +35,7 @@ const FormInput = (props) => {
         {errorText && <div className="invalid-tooltip">{errorText}</div>}
       </FloatingLabel>
     </Form.Group>
-  );
-};
+  )
+}
 
-export default FormInput;
+export default FormInput

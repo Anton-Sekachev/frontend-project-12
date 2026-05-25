@@ -1,29 +1,29 @@
 /* eslint-disable no-param-reassign */
-import Nav from 'react-bootstrap/Nav';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Button from 'react-bootstrap/Button';
-import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { setActiveChannel } from '../../../redux/slices/channelsSlice';
-import { openModal } from '../../../redux/slices/modalSlice';
+import Nav from 'react-bootstrap/Nav'
+import Dropdown from 'react-bootstrap/Dropdown'
+import Button from 'react-bootstrap/Button'
+import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { setActiveChannel } from '../../../redux/slices/channelsSlice'
+import { openModal } from '../../../redux/slices/modalSlice'
 
 const Channel = ({ data, isCurrent }) => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
 
-  const buttonVariant = isCurrent ? 'secondary' : 'text-start';
+  const buttonVariant = isCurrent ? 'secondary' : 'text-start'
 
   const handleChannelClick = () => {
-    dispatch(setActiveChannel(data.id));
-  };
+    dispatch(setActiveChannel(data.id))
+  }
 
   const handleRemoveChannel = () => {
-    dispatch(openModal({ type: 'removeChannel', data: { channelId: data.id } }));
-  };
+    dispatch(openModal({ type: 'removeChannel', data: { channelId: data.id } }))
+  }
 
   const handleRenameChannel = () => {
-    dispatch(openModal({ type: 'renameChannel', data: { channelId: data.id } }));
-  };
+    dispatch(openModal({ type: 'renameChannel', data: { channelId: data.id } }))
+  }
 
   return (
     <Nav.Item className="channel w-100">
@@ -47,7 +47,7 @@ const Channel = ({ data, isCurrent }) => {
         )}
       </Dropdown>
     </Nav.Item>
-  );
-};
+  )
+}
 
-export default Channel;
+export default Channel
