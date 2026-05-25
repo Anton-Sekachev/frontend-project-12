@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import Modal from 'react-bootstrap/Modal'
 import { useSelector, useDispatch } from 'react-redux'
 import { useFormik } from 'formik'
