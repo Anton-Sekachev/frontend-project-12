@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
@@ -34,8 +35,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "react-scripts test",
-    "lint": "eslint . --ext .js,.jsx",
-    "fix": "eslint . --ext .js,.jsx --fix"
+    "lint": "eslint .",
+    "fix": "eslint . --fix"
   },
   "browserslist": {
     "production": [
@@ -58,6 +59,7 @@
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.5.2",
     "vite": "^5.3.5"
   }
 }
