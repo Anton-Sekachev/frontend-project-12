@@ -1,6 +1,5 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Anton-Sekachev/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Anton-Sekachev/frontend-project-12/actions)
-
 [![Maintainability](https://qlty.sh/gh/Anton-Sekachev/projects/frontend-project-12/maintainability.svg)](https://qlty.sh/gh/Anton-Sekachev/projects/frontend-project-12)
 
 ## Чат (Slack)
