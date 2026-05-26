@@ -14,11 +14,8 @@
 ## Установка и запуск (Installation & Setup)
 
 Выполните следующие команды в терминале пошагово:
-
-### 1. Клонирование репозитория
-Склонируйте проект к себе на локальный компьютер и перейдите в его корневую директорию:
 ```bash
-1. git clone [https://github.com/](https://github.com/)[Anton-Sekachev]/frontend-project-12.git
+1. git clone https://github.com/Anton-Sekachev/frontend-project-12.git
 2. make install
-3. npm link
-4. make start
+3. make start
+После запуска приложение автоматически станет доступно в браузере по адресу: http://localhost:5001.
