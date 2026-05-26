@@ -15,7 +15,8 @@
 
 Выполните следующие команды в терминале пошагово:
 ```bash
-1. git clone https://github.com/Anton-Sekachev/frontend-project-12.git
-2. make install
-3. make start
+git clone https://github.com/Anton-Sekachev/frontend-project-12.git
+make install
+make start
+```
 После запуска приложение автоматически станет доступно в браузере по адресу: http://localhost:5001.
