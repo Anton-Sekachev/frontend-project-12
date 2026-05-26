@@ -1,6 +1,8 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Anton-Sekachev/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Anton-Sekachev/frontend-project-12/actions)
 
+[![Maintainability](https://qlty.sh/gh/Anton-Sekachev/projects/frontend-project-12/maintainability.svg)](https://qlty.sh/gh/Anton-Sekachev/projects/frontend-project-12)
+
 ## Чат (Slack)
 [Real-time чат](https://frontend-project-12-128u.onrender.com) позволяет общаться в режиме реального времени с мгновенной доставкой сообщений через протокол websockets. В чате реализована возможность создавать, переименовывать, удалять новые каналы (комнаты) для общения, а доступ к чату ограничен авторизацией пользователя с использованием технологии JWT. Для авторизации предусмотрена возможность регистрации нового пользователя.
 
