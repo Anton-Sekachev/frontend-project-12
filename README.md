@@ -17,6 +17,7 @@
 ```bash
 git clone https://github.com/Anton-Sekachev/frontend-project-12.git
 make install
+make build
 make start
 ```
 После запуска приложение автоматически станет доступно в браузере по адресу: http://localhost:5001.
