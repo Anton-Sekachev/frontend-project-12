@@ -17,22 +17,24 @@ const RemoveChannel = () => {
 
   const channelId = useSelector(selectors.modalChannelIdSelector)
 
+  const handleRemove = async () => {
+    try {
+      const header = getAuthHeader()
+
+      await axios.delete(`/api/v1/channels/${channelId}`, { headers: header })
+
+      toast.success(t('channels.channelRemoved'))
+      dispatch(closeModal())
+    }
+    catch (error) {
+      console.error('Delete error:', error)
+      toast.error(t('errors.network'))
+    }
+  }
+
   const formik = useFormik({
     initialValues: {},
-    onSubmit: async () => {
-      try {
-        const header = getAuthHeader()
-
-        await axios.delete(`/api/v1/channels/${channelId}`, { headers: header })
-
-        toast.success(t('channels.channelRemoved'))
-        dispatch(closeModal())
-      }
-      catch (error) {
-        console.error('Delete error:', error)
-        toast.error(t('errors.network'))
-      }
-    },
+    onSubmit: handleRemove,
   })
 
   return (

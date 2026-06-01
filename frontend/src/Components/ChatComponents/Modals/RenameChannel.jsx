@@ -33,30 +33,32 @@ const RenameChannel = () => {
     }
   }, [])
 
+  const handleRename = async (values) => {
+    try {
+      const cleanName = filter.clean(values.channelName.trim())
+      const header = getAuthHeader()
+
+      await axios.patch(
+        `/api/v1/channels/${channelId}`,
+        { name: cleanName },
+        { headers: header },
+      )
+
+      dispatch(closeModal())
+      toast.success(t('channels.channelRenamed'))
+    }
+    catch (error) {
+      console.error(error)
+      toast.error(t('errors.networkError'))
+    }
+  }
+
   const formik = useFormik({
     initialValues: { channelName },
     validationSchema: ChannelNameSchema,
     validateOnChange: false,
     validateOnBlur: false,
-    onSubmit: async (values) => {
-      try {
-        const cleanName = filter.clean(values.channelName.trim())
-        const header = getAuthHeader()
-
-        await axios.patch(
-          `/api/v1/channels/${channelId}`,
-          { name: cleanName },
-          { headers: header },
-        )
-
-        dispatch(closeModal())
-        toast.success(t('channels.channelRenamed'))
-      }
-      catch (error) {
-        console.error(error)
-        toast.error(t('errors.networkError'))
-      }
-    },
+    onSubmit: handleRename,
   })
 
   return (

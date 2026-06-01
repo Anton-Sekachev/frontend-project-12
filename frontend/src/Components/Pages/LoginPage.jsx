@@ -23,29 +23,31 @@ const LoginForm = () => {
   const [authFailed, setAuthFailed] = useState(false)
   const navigate = useNavigate()
 
+  const handleLogin = async (values, formikHelpers) => {
+    setAuthFailed(false)
+    try {
+      const { data } = await axios.post(routes.loginPath, values)
+      logIn(data)
+      formikHelpers.resetForm()
+      navigate(routes.chatPagePath)
+    }
+    catch (error) {
+      if (error.code === 'ERR_NETWORK') {
+        toast.error(t('errors.networkError'))
+      }
+      else if (error.response?.status === 401) {
+        setAuthFailed(true)
+        formikHelpers.setFieldError('password', t('errors.wrongAuthData'))
+      }
+      else {
+        toast.error(t('errors.dataLoadingError'))
+      }
+    }
+  }
+
   const formik = useFormik({
     initialValues: { username: '', password: '' },
-    onSubmit: async (values) => {
-      setAuthFailed(false)
-      try {
-        const { data } = await axios.post(routes.loginPath, values)
-        logIn(data)
-        formik.resetForm()
-        navigate(routes.chatPagePath)
-      }
-      catch (error) {
-        if (error.code === 'ERR_NETWORK') {
-          toast.error(t('errors.networkError'))
-        }
-        else if (error.response?.status === 401) {
-          setAuthFailed(true)
-          formik.setFieldError('password', t('errors.wrongAuthData'))
-        }
-        else {
-          toast.error(t('errors.dataLoadingError'))
-        }
-      }
-    },
+    onSubmit: handleLogin,
   })
 
   return (

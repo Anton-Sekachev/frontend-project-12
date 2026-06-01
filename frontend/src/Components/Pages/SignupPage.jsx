@@ -8,59 +8,44 @@ import { useFormik } from 'formik'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
-import * as Yup from 'yup'
 import axios from 'axios'
 import FormInput from './FormInput'
 import useAuth from '../../Hooks/useAuth'
 import routes from '../../routes'
-
+import { getSignupSchema } from '../../utils/validationSchemas'
 import signupImage from '../../Images/signup.svg'
-
-const SignupSchema = Yup.object().shape({
-  username: Yup
-    .string()
-    .trim()
-    .min(3, 'errors.shouldHaveLength')
-    .max(20, 'errors.shouldHaveLength')
-    .required('errors.required'),
-  password: Yup
-    .string()
-    .required('errors.required')
-    .min(6, 'errors.shouldHaveMinLength'),
-  passwordConfirm: Yup
-    .string()
-    .when('password', (password, field) => password && field.oneOf([Yup.ref('password')], 'errors.passwordsShouldBeEqual')),
-})
 
 const SignupPage = () => {
   const { t } = useTranslation()
   const { logIn } = useAuth()
   const navigate = useNavigate()
 
+  const handleRegistration = async (values, formikHelpers) => {
+    const { username, password } = values
+    try {
+      const { data } = await axios.post(routes.signupPath, { username, password })
+      logIn(data)
+      navigate(routes.chatPagePath)
+    }
+    catch (error) {
+      switch (error.code) {
+        case 'ERR_BAD_REQUEST':
+          formikHelpers.setFieldError('username', t('errors.userConflict'))
+          break
+        case 'ERR_NETWORK':
+          toast.error(t('errors.networkError'))
+          break
+        default:
+          toast.error(error.message)
+          break
+      }
+    }
+  }
+
   const formik = useFormik({
     initialValues: { username: '', password: '', passwordConfirm: '' },
-    validationSchema: SignupSchema,
-    onSubmit: async (values) => {
-      const { username, password } = values
-      try {
-        const { data } = await axios.post(routes.signupPath, { username, password })
-        logIn(data)
-        navigate(routes.chatPagePath)
-      }
-      catch (error) {
-        switch (error.code) {
-          case 'ERR_BAD_REQUEST':
-            formik.setFieldError('username', t('errors.userConflict'))
-            break
-          case 'ERR_NETWORK':
-            toast.error(t('errors.networkError'))
-            break
-          default:
-            toast.error(error.message)
-            break
-        }
-      }
-    },
+    validationSchema: getSignupSchema(t),
+    onSubmit: handleRegistration,
   })
 
   return (

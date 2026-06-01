@@ -31,36 +31,38 @@ const AddChannel = () => {
     }
   }, [])
 
+  const handleAddChannel = async (values, formikHelpers) => {
+    const cleanName = filter.clean(values.channelName.trim())
+
+    try {
+      const channelData = { name: cleanName }
+      const header = getAuthHeader()
+
+      const response = await axios.post('/api/v1/channels', channelData, { headers: header })
+      const { data } = response
+
+      toast.success(t('channels.channelAdded'))
+
+      if (data?.id) {
+        dispatch(setActiveChannel(String(data.id)))
+      }
+
+      dispatch(closeModal())
+      formikHelpers.resetForm()
+    }
+    catch (err) {
+      console.error('[AddChannel HTTP-ошибка]:', err)
+      toast.error(t('errors.networkError'))
+      formikHelpers.setSubmitting(false)
+    }
+  }
+
   const formik = useFormik({
     initialValues: { channelName: '' },
     validationSchema: ChannelNameSchema,
     validateOnChange: false,
     validateOnBlur: false,
-    onSubmit: async (values, { setSubmitting }) => {
-      const cleanName = filter.clean(values.channelName.trim())
-
-      try {
-        const channelData = { name: cleanName }
-        const header = getAuthHeader()
-
-        const response = await axios.post('/api/v1/channels', channelData, { headers: header })
-        const { data } = response
-
-        toast.success(t('channels.channelAdded'))
-
-        if (data?.id) {
-          dispatch(setActiveChannel(String(data.id)))
-        }
-
-        dispatch(closeModal())
-        formik.resetForm()
-      }
-      catch (err) {
-        console.error('[AddChannel HTTP-ошибка]:', err)
-        toast.error(t('errors.networkError'))
-        setSubmitting(false)
-      }
-    },
+    onSubmit: handleAddChannel,
   })
 
   return (

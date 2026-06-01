@@ -6,21 +6,18 @@ import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-import * as Yup from 'yup'
 import Message from './Message.jsx'
 import selectors from '../../../redux/selectors.js'
 import useAuth from '../../../Hooks/useAuth'
 import useFilter from '../../../Hooks/useFilter'
+
+import { getMessageSchema } from '../../../utils/validationSchemas'
 
 const scrollToBottom = (element) => {
   if (element) {
     element.scrollTo(0, element.scrollHeight)
   }
 }
-
-const MessageSchema = Yup.object().shape({
-  body: Yup.string().trim().min(1).required(),
-})
 
 const Messages = () => {
   const { t } = useTranslation()
@@ -42,33 +39,35 @@ const Messages = () => {
     scrollToBottom(messagesBoxRef.current)
   }, [messages])
 
+  const handleSendMessage = async (values, formikHelpers) => {
+    const cleanBody = filter.clean(values.body.trim())
+
+    const newMessage = {
+      body: cleanBody,
+      channelId: currentChannelId,
+      username: user.username,
+    }
+
+    try {
+      const header = getAuthHeader()
+
+      await axios.post('/api/v1/messages', newMessage, {
+        headers: header,
+      })
+
+      formikHelpers.resetForm()
+      setTimeout(() => messageInputRef.current?.focus(), 0)
+    }
+    catch (error) {
+      toast.error(t('errors.network'))
+      console.error('Ошибка отправки:', error)
+    }
+  }
+
   const formik = useFormik({
     initialValues: { body: '' },
-    validationSchema: MessageSchema,
-    onSubmit: async (values, { resetForm }) => {
-      const cleanBody = filter.clean(values.body.trim())
-
-      const newMessage = {
-        body: cleanBody,
-        channelId: currentChannelId,
-        username: user.username,
-      }
-
-      try {
-        const header = getAuthHeader()
-
-        await axios.post('/api/v1/messages', newMessage, {
-          headers: header,
-        })
-
-        resetForm()
-        setTimeout(() => messageInputRef.current?.focus(), 0)
-      }
-      catch (error) {
-        toast.error(t('errors.network'))
-        console.error('Ошибка отправки:', error)
-      }
-    },
+    validationSchema: getMessageSchema(),
+    onSubmit: handleSendMessage,
   })
 
   return (
